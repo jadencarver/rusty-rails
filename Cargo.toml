@@ -13,3 +13,9 @@ handlebars-iron = "*"
 rustc-serialize = "*"
 staticfile = "*"
 mount = "*"
+logger = "*"
+
+[dependencies.mysql]
+mysql = "*"
+default-features = false
+features = ["socket"]

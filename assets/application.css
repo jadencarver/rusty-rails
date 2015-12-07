@@ -12,13 +12,13 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 4rem;
-  font-size: 2rem; }
+  font-size: 4rem; }
 
 p {
   margin-bottom: 2rem; }
 
 body > article, form {
-  margin: 0 auto;
+  margin: 4rem auto;
   max-width: 1000px; }
 
 /*# sourceMappingURL=application.css.map */
