@@ -1,0 +1,15 @@
+[package]
+name = "rusty-rails"
+version = "0.1.0"
+authors = ["Jaden Carver <jaden.carver@gmail.com>"]
+
+[features]
+watch = ["handlebars-iron/watch"]
+
+[dependencies]
+iron = "*"
+router = "*"
+handlebars-iron = "*"
+rustc-serialize = "*"
+staticfile = "*"
+mount = "*"
