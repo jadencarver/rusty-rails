@@ -1,21 +1,23 @@
 use std::collections::BTreeMap;
 use iron::prelude::*;
 use iron::status;
-use hbs::Template;
-use rustc_serialize::json::ToJson;
+use handlebars::Template;
+use rustc_serialize::json::{Json, ToJson};
+use params::Params;
+use router::Router;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
-  let mut response = Response::new();
-  let mut data = BTreeMap::new();
-  data.insert("year".to_string(), "2015".to_json());
-  response.set_mut(Template::new("index", data)).set_mut(status::Ok);
-  Ok(response)
+  Ok(render("index", None))
 }
 
 pub fn about(request: &mut Request) -> IronResult<Response> {
-  let mut response = Response::new();
-  let mut data = BTreeMap::new();
+  let mut data: BTreeMap<String, Json> = BTreeMap::new();
   data.insert("year".to_string(), "2015".to_json());
-  response.set_mut(Template::new("about", data)).set_mut(status::Ok);
-  Ok(response)
+  Ok(render("about", Some(data)))
+}
+
+fn render(template: &str, data: Option<BTreeMap<String, Json>>) -> Response {
+  let mut response = Response::new();
+  response.set_mut(Template::new(template, data)).set_mut(status::Ok);
+  response
 }

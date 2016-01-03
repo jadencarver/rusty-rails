@@ -14,8 +14,13 @@ rustc-serialize = "*"
 staticfile = "*"
 mount = "*"
 logger = "*"
+params = "*"
 
 [dependencies.mysql]
 mysql = "*"
 default-features = false
 features = ["socket"]
+
+[[bin]]
+name = "start-rusty"
+path = "src/routes.rs"
