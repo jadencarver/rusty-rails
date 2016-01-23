@@ -1,0 +1,13 @@
+[package]
+name = "rusty-rails"
+version = "0.1.0"
+authors = ["Jaden Carver <jaden.carver@gmail.com>"]
+
+[dependencies]
+postgres = "0.11"
+iron = "0.2"
+router = "0.1"
+params = "0.0.2"
+maud = "0.7"
+maud_macros = { git = "https://github.com/lfairy/maud.git" }
+logger = "0.0.3"
