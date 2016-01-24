@@ -1,0 +1,74 @@
+$color1: #F7E9B5;
+$color2: #E0D191;
+$color3: #201807;
+$color4: #AA3F14;
+$color5: #A0914E;
+
+@import url(https://fonts.googleapis.com/css?family=Walter+Turncoat);
+@import url(https://fonts.googleapis.com/css?family=Kreon:400,700,300);
+
+$font1: "Walter Turncoat", cursive;
+$font2: "Kreon", serif;
+
+* { margin: 0; padding: 0; line-height: 2rem; }
+
+body {
+	font-family: $font2;
+	background-color: $color1;
+  background-image: repeating-linear-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,0) calc(2rem - 2px), rgba(0,0,0,0.1) 2rem);
+  font-size: 18pt;
+  line-height: 1rem;
+}
+
+h1, h2, h3 {
+	font-family: $font1;
+	line-height: 4rem;
+	padding-top: 2rem;
+}
+
+h1 { font-size: 4rem; }
+h2 { font-size: 3rem; }
+h3 { font-size: 2rem; }
+
+p {
+	margin-bottom: 2rem;
+}
+
+code, pre {
+	background-color: #EEEEEE;
+	border-radius: 0.25em;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+	border: solid #DDDDDD 1px;
+	box-shadow: 1pt 1pt 1pt #CCCCCC;
+}
+
+ul, ol {
+	padding-left: 3em;
+}
+
+article, form {
+	> * {
+		max-width: 980px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-top: 1rem;
+	}
+	> section {
+		max-width: 100%;
+		padding-bottom: 1rem;
+		> * {
+			max-width: 980px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+	> section:nth-child(1) {
+		background-color: $color3;
+		color: $color2;
+	}
+	> section:nth-child(2) {
+		background-color: $color4;
+	}
+}
+
