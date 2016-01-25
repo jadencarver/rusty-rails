@@ -4,11 +4,11 @@ $color3: #201807;
 $color4: #AA3F14;
 $color5: #A0914E;
 
-@import url(https://fonts.googleapis.com/css?family=Walter+Turncoat);
-@import url(https://fonts.googleapis.com/css?family=Kreon:400,700,300);
+@import url(https://fonts.googleapis.com/css?family=Bitter);
+@import url(https://fonts.googleapis.com/css?family=Raleway);
 
-$font1: "Walter Turncoat", cursive;
-$font2: "Kreon", serif;
+$font1: "Bitter", cursive;
+$font2: "Raleway", serif;
 
 * { margin: 0; padding: 0; line-height: 2rem; }
 
@@ -16,7 +16,7 @@ body {
 	font-family: $font2;
 	background-color: $color1;
   background-image: repeating-linear-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,0) calc(2rem - 2px), rgba(0,0,0,0.1) 2rem);
-  font-size: 18pt;
+  font-size: 16pt;
   line-height: 1rem;
 }
 
@@ -44,7 +44,12 @@ code, pre {
 }
 
 ul, ol {
-	padding-left: 3em;
+	> li { margin-left: 1.25em; }
+}
+
+.col-3 > * {
+	width: 33%;
+	float: left;
 }
 
 article, form {
@@ -57,18 +62,39 @@ article, form {
 	> section {
 		max-width: 100%;
 		padding-bottom: 1rem;
+		&::after {
+			content: '';
+			display: block;
+			clear: both;
+		}
 		> * {
 			max-width: 980px;
 			margin-left: auto;
 			margin-right: auto;
 		}
 	}
-	> section:nth-child(1) {
+	> section:nth-child(1):nth-child(1) {
 		background-color: $color3;
 		color: $color2;
 	}
-	> section:nth-child(2) {
+	> section:nth-child(2):nth-child(2) {
 		background-color: $color4;
+	}
+	> section:nth-child(4):nth-child(4) {
+		background-color: $color4;
+	}
+	> section:nth-child(2n+1) {
+		background-color: $color1;
+	}
+	> section:nth-child(2n) {
+		background-color: $color2;
+	}
+	> section:last-child {
+		background-color: $color3;
+		color: $color2;
+	}
+	> section ~ section {
+		padding-bottom: 4rem;
 	}
 }
 
