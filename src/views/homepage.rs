@@ -14,7 +14,7 @@ pub fn homepage() -> String {
 				ol {
 					li { "Use " code { "cargo run scaffold" } " to create a RESTful resource." }
 					li { "Create and update the database using " code { "cargo run migrate" } "." }
-					li { "Access the " a href="/_rusty/analytics" { "built in analytics dashboard" } "." }
+					li { "Access the " a href="/_rusty" { "built in analytics dashboard" } "." }
 				}
 			}
 			section {}

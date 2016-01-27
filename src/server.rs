@@ -29,9 +29,19 @@ fn homepage(req: &mut Request) -> IronResult<Response> {
 	)))
 }
 
+fn dashboard(req: &mut Request) -> IronResult<Response> {
+	Ok(Response::with((
+		status::Ok,
+		"text/html".parse::<Mime>().unwrap(),
+		views::layout(views::dashboard())
+	)))
+}
+
+
 fn main() {
 	let routes = router!(
 		get "/" => homepage,
+		get "/_rusty" => dashboard,
 		get "/*" => Static::new(Path::new("public"))
 	);
 
@@ -39,6 +49,6 @@ fn main() {
 	let mut chain = Chain::new(routes);
 	chain.link_before(logger_before).link_after(logger_after);
 	Iron::new(chain)
-		.http("localhost:3000")
+		.http("0.0.0.0:3000")
 		.unwrap();
 }

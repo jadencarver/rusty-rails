@@ -20,3 +20,5 @@ pub fn layout(body: String) -> String {
 
 mod homepage;
 pub fn homepage() -> String { homepage::homepage() }
+mod dashboard;
+pub fn dashboard() -> String { dashboard::dashboard() }
