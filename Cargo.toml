@@ -12,7 +12,6 @@ maud = "0.7"
 maud_macros = { git = "https://github.com/lfairy/maud.git" }
 logger = "0.0.3"
 argparse = "0.2"
-mount = "0.0.9"
 staticfile = "0.1"
 persistent = "0.0.6"
 
