@@ -48,7 +48,6 @@ pub fn dashboard() -> String {
       section {}
       section {}
     }
-  });
-
+  }).unwrap();
   body
 }

@@ -13,7 +13,7 @@ pub fn layout(body: String) -> String {
 				$PreEscaped(body)
 			}
 		}
-	});
+	}).unwrap();
 
 	page
 }

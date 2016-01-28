@@ -1,14 +1,13 @@
 #![feature(plugin)]
 #![plugin(maud_macros)]
 extern crate iron;
-extern crate postgres;
-#[macro_use]
-extern crate router;
+#[macro_use] extern crate router;
 extern crate logger;
 extern crate maud;
 extern crate staticfile;
+extern crate postgres;
 
-use iron::{Iron, Request, Response, IronResult, Chain, Headers};
+use iron::{Iron, Request, Response, IronResult, Chain};
 use iron::status;
 use iron::mime::Mime;
 use std::path::Path;
@@ -18,7 +17,7 @@ use logger::Logger;
 
 mod views;
 
-fn homepage(req: &mut Request) -> IronResult<Response> {
+fn homepage(_: &mut Request) -> IronResult<Response> {
 	Ok(Response::with((
 		status::Ok,
 		"text/html".parse::<Mime>().unwrap(),
@@ -26,7 +25,7 @@ fn homepage(req: &mut Request) -> IronResult<Response> {
 	)))
 }
 
-fn dashboard(req: &mut Request) -> IronResult<Response> {
+fn dashboard(_: &mut Request) -> IronResult<Response> {
 	Ok(Response::with((
 		status::Ok,
 		"text/html".parse::<Mime>().unwrap(),

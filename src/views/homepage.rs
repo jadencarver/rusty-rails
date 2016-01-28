@@ -50,7 +50,7 @@ pub fn homepage() -> String {
 			section {}
 			section {}
 		}
-	});
+	}).unwrap();
 
 	body
 }
