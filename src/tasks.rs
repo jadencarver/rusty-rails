@@ -21,7 +21,7 @@ fn main() {
     match command.as_ref() {
     	"assets" => {
 
-    		println!("Compiling assets...");
+            println!("Compiling assets...");
             std::fs::create_dir_all("public/assets").ok();
 
             Command::new("bower").arg("install").status().unwrap();
