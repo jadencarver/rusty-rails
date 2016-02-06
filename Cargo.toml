@@ -4,7 +4,6 @@ version = "0.1.0"
 authors = ["Jaden Carver <jaden.carver@gmail.com>"]
 
 [dependencies]
-postgres = "0.11"
 iron = "0.2"
 router = "0.1"
 params = "0.0.2"
@@ -13,7 +12,6 @@ maud_macros = { git = "https://github.com/lfairy/maud.git" }
 logger = "0.0.3"
 argparse = "0.2"
 staticfile = "0.1"
-persistent = "0.0.6"
 glob = "0.2.10"
 diesel = "0.5.0"
 diesel_codegen = { version = "0.5.0", default-features = false, features = ["nightly", "postgres"] }
@@ -22,8 +20,12 @@ dotenv_macros = "0.8.0"
 
 [[bin]]
 name = "start"
-path = "app/routes.rs"
+path = "app/server.rs"
 
 [[bin]]
 name = "task"
 path = "src/tasks.rs"
+
+[[bin]]
+name = "generate"
+path = "src/generate.rs"

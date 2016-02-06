@@ -24,6 +24,19 @@ fn main() {
             println!("Compiling assets...");
             std::fs::create_dir_all("public/assets").ok();
 
+            for file in glob("app/assets/images/*").unwrap() {
+                match file {
+                    Ok(path) => {
+                        let dest = format!("public/assets/{}", path.file_name().unwrap().to_str().unwrap());
+                        match fs::copy(path, dest.clone()) {
+                            Ok(bytes) => println!("- copied {}", dest),
+                            Err(msg) => println!("- error: {}", msg)
+                        }
+                    },
+                    Err(e) => println!("{:?}", e),
+                }
+            }
+
             Command::new("bower").arg("install").status().unwrap();
 
             for file in glob("vendor/assets/*/dist/*.js").unwrap() {
@@ -46,6 +59,8 @@ fn main() {
                         let dest = format!("public/assets/{}.css", path.file_stem().unwrap().to_str().unwrap());
                         Command::new("scss")
                             .arg(src).arg(dest.clone())
+                            .arg("--cache-location").arg("tmp/cache")
+                            .arg("--load-path").arg("app/assets/stylesheets")
                             .args(&["--style","compressed"])
                             .status().unwrap();
                         println!("- compiled {}", dest);

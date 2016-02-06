@@ -4,9 +4,19 @@ use iron::status;
 use layouts;
 use diesel::types::Timestamp;
 
-mod entry;
+use diesel::prelude::*;
+use diesel::pg::PgConnection;
+use dotenv::dotenv;
+use std::env;
+
 mod views;
-use entries::entry::Entry;
+use models::entry::Entry;
+
+pub fn establish_connection() -> PgConnection {
+  dotenv().ok();
+  let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+  PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
+}
 
 pub fn index(_: &mut Request) -> IronResult<Response> {
   let entries = vec![

@@ -1,3 +1,4 @@
-target
-.sass-cache
-vendor/assets
+/target
+/.sass-cache
+/vendor/assets
+/node_modules

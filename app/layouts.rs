@@ -7,7 +7,8 @@ pub fn application(body: String) -> String {
     html {
       head {
         title "Rusty Rails"
-        link rel="stylesheet" href="/assets/style.css" /
+        link rel="stylesheet" href="/assets/stylesheets.css" /
+        script src="/assets/javascripts.css" /
       }
       body {
         $PreEscaped(body)

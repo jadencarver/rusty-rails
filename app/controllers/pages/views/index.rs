@@ -12,8 +12,8 @@ pub fn index() -> String {
 			section {
 				h2 "Getting started"
 				ol {
-					li { "Use " code { "cargo run scaffold" } " to create a RESTful resource." }
-					li { "Create and update the database using " code { "cargo run migrate" } "." }
+					li { "Use " code { "generate scaffold" } " to create a RESTful resource." }
+					li { "Create and update the database using " code { "diesel migrate" } "." }
 					li { "Access the " a href="/_rusty" { "built in analytics dashboard" } "." }
 				}
 			}
