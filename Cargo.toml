@@ -22,8 +22,8 @@ dotenv_macros = "0.8.0"
 
 [[bin]]
 name = "start"
-path = "src/start.rs"
+path = "app/routes.rs"
 
 [[bin]]
 name = "task"
-path = "src/bin/tasks.rs"
+path = "src/tasks.rs"

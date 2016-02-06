@@ -1,5 +1,5 @@
 use maud::PreEscaped;
-use app::entries::entry::Entry;
+use entries::entry::Entry;
 
 // pub fn simple_format(text: String) -> PreEscaped<String> {
 //   let paragraphs = text.split("\n\n").collect().unwrap();

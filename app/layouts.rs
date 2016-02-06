@@ -1,9 +1,6 @@
-pub mod entries;
-pub mod pages;
-
 use maud::PreEscaped;
 
-pub fn layout(body: String) -> String {
+pub fn application(body: String) -> String {
   let mut page = String::new();
 
   html!(page, {

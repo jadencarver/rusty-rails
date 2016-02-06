@@ -26,7 +26,9 @@ use diesel::pg::PgConnection;
 use dotenv::dotenv;
 use std::env;
 
-mod app;
+pub mod layouts;
+mod pages;
+mod entries;
 
 pub fn establish_connection() -> PgConnection {
   dotenv().ok();
@@ -38,9 +40,9 @@ pub fn establish_connection() -> PgConnection {
 fn main() {
 
 	let routes = router!(
-		get "/" => app::pages::index,
-		get "/entries" => app::entries::index,
-		get "/entries/:id" => app::entries::show,
+		get "/" => pages::index,
+		get "/entries" => entries::index,
+		get "/entries/:id" => entries::show,
 		get "/*" => Static::new(Path::new("public"))
 	);
 
