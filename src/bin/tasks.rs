@@ -21,9 +21,9 @@ fn main() {
 
     		std::fs::create_dir_all("public/assets").ok();			
 				Command::new("scss")
-					.arg("--watch")
+				  .arg("--watch")
 				  .args(&["--style","compressed"])
-				  .arg("src/assets:public/assets")
+				  .arg("src/app/assets:public/assets")
 				  .status().unwrap();
     	},
     	_ => {

@@ -1,4 +1,4 @@
-pub fn homepage() -> String {
+pub fn index() -> String {
 	let mut body = String::new();
 
 	html!(body, {

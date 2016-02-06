@@ -52,7 +52,7 @@ ul, ol {
 	float: left;
 }
 
-article, form {
+article, form, .container {
 	> * {
 		max-width: 980px;
 		margin-left: auto;
