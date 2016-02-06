@@ -24,6 +24,8 @@ fn main() {
     		println!("Compiling assets...");
             std::fs::create_dir_all("public/assets").ok();
 
+            Command::new("bower").arg("install").status().unwrap();
+
             for file in glob("vendor/assets/*/dist/*.js").unwrap() {
                 match file {
                     Ok(path) => {

@@ -1,7 +1,6 @@
 {
-  "name": "my-project",
-  "version": "0.0.1",
+  "name": "rusty-rails",
   "dependencies": {
-    "jquery": "*",
+    "jquery": "*"
   }
 }
