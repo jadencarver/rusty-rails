@@ -16,11 +16,11 @@ pub fn index(entries: Vec<Entry>) -> String {
 
   html!(body, {
 
-    ol class="container" {
+    ul class="container" {
       li {
         #for entry in entries {
-          article id="entry_$(entry.id)" {
-            h3 $(entry.title)
+          article id=$(format!("entry_{}", entry.id)) {
+            a href=$(format!("/entries/{}", entry.id)) $(entry.title)
             // $(simple_format(entry.title))
           }
         }
