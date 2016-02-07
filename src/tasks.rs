@@ -44,10 +44,11 @@ fn main() {
                 let path = file.unwrap();
                 let dest_name = path.file_name().unwrap().to_str().unwrap();
                 let dest = format!("public/assets/{}", dest_name);
+                let source_map = format!("--source-map={}.map", dest);
 
                 Command::new("cjsc").arg("-C").arg("vendor/assets/cjsc.config")
                     .arg(path.clone()).arg("-M")
-                    .arg("-o").arg(dest).arg("--source-map=*")
+                    .arg("-o").arg(dest).arg(source_map)
                     .status().unwrap();
             }
 
