@@ -1,4 +1,4 @@
 /target
-/.sass-cache
-/vendor/assets
+/vendor/assets/*
 /node_modules
+/tmp/*

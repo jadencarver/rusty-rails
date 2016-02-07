@@ -14,6 +14,8 @@ dependencies = [
  "maud_macros 0.7.3 (git+https://github.com/lfairy/maud.git)",
  "params 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "staticfile 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -594,6 +596,15 @@ dependencies = [
  "quasi_codegen 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "syntex 0.26.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "syntex_syntax 0.26.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "serde_json"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "num 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
