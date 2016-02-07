@@ -47,7 +47,7 @@ fn main() {
 
                 Command::new("cjsc").arg("-C").arg("vendor/assets/cjsc.config")
                     .arg(path.clone()).arg("-M")
-                    .arg("-o").arg(dest)
+                    .arg("-o").arg(dest).arg("--source-map=*")
                     .status().unwrap();
             }
 
@@ -64,6 +64,19 @@ fn main() {
                             .status().unwrap();
                         println!("- compiled {}", dest);
 
+                    },
+                    Err(e) => println!("{:?}", e),
+                }
+            }
+
+            for file in glob("app/assets/images/*").unwrap() {
+                match file {
+                    Ok(path) => {
+                        let dest = format!("public/assets/{}", path.file_name().unwrap().to_str().unwrap());
+                        match fs::copy(path, dest.clone()) {
+                            Ok(bytes) => println!("- copied {}", dest),
+                            Err(msg) => println!("- error: {}", msg)
+                        }
                     },
                     Err(e) => println!("{:?}", e),
                 }
