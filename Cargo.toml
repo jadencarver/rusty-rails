@@ -26,7 +26,7 @@ path = "app/server.rs"
 
 [[bin]]
 name = "task"
-path = "src/tasks.rs"
+path = "src/task.rs"
 
 [[bin]]
 name = "generate"
