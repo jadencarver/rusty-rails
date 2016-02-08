@@ -2,6 +2,6 @@
   "name": "rusty-rails",
   "dependencies": {
     "jquery": "*",
-    "rails-turbolinks": "*"
+    "react": "*"
   }
 }
