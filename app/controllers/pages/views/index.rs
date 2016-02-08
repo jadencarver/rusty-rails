@@ -13,6 +13,7 @@ pub fn index() -> String {
 				h2 "Getting started"
 				ol {
 					li { "Use " code { "generate scaffold" } " to create a RESTful resource." }
+					li { "Use " code { "task assets" } " to compile SCSS and CommonJS JavaScript." }
 					li { "Create and update the database using " code { "diesel migrate" } "." }
 					li { "Access the " a href="/_rusty" { "built in analytics dashboard" } "." }
 				}

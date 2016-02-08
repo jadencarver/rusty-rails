@@ -1,9 +1,13 @@
-pub fn show() -> String {
+use models::entry::Entry;
+use helpers::view::simple_format;
+
+pub fn show(entry: Entry) -> String {
     let mut body = String::new();
 
     html!(body, {
         article {
-            h1 "Entry Show Page"
+            h2 $(entry.title)
+            $(simple_format(entry.body))
         }
     });
 

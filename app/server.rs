@@ -1,6 +1,5 @@
 #![feature(custom_derive, custom_attribute, plugin)]
-#![plugin(maud_macros)]
-// #![plugin(diesel_codegen, dotenv_macros)]
+#![plugin(maud_macros, diesel_codegen, dotenv_macros)]
 
 extern crate iron;
 #[macro_use] extern crate router;
@@ -18,6 +17,8 @@ mod routes;
 pub mod controllers;
 pub mod models;
 pub mod layouts;
+pub mod schema;
+pub mod helpers;
 
 fn main() {
     let (logger_before, logger_after) = Logger::new(None);

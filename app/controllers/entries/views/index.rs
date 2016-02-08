@@ -1,24 +1,24 @@
-use maud::PreEscaped;
 use models::entry::Entry;
+use helpers::view::simple_format;
 
 pub fn index(entries: Vec<Entry>) -> String {
-  let mut body = String::new();
+    let mut body = String::new();
 
-  html!(body, {
+    html!(body, {
 
-    ul class="container" {
-      li {
-        #for entry in entries {
-          article id=$(format!("entry_{}", entry.id)) {
-            a href=$(format!("/entries/{}", entry.id)) $(entry.title)
-            $(entry.body)
-          }
+        ul class="container" {
+            li {
+                #for entry in entries {
+                    article id=$(format!("entry_{:?}", entry.id)) {
+                        h4 a href=$(format!("/entries/{:?}", entry.id)) $(entry.title)
+                            $(simple_format(entry.body))
+                    }
+                }
+            }
         }
-      }
-    }
 
-  });
+    });
 
-  body
+    body
 
 }

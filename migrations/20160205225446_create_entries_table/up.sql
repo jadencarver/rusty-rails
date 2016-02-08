@@ -2,6 +2,5 @@ CREATE TABLE entries (
   id SERIAL PRIMARY KEY,
   title VARCHAR NOT NULL,
   body TEXT NOT NULL,
-  public BOOLEAN NOT NULL DEFAULT 'f',
-  created_at TIMESTAMPTZ NOT NULL
+  public BOOLEAN NOT NULL DEFAULT 'f'
 )
