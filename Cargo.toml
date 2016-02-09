@@ -22,9 +22,15 @@ serde = "*"
 serde_json = "*"
 r2d2 = "0.6"
 r2d2_postgres = "0.10.0"
+ansi_term = "0.7.1"
+notify = "^2.5.0"
 
 [[bin]]
 name = "start"
+path = "src/monitor.rs"
+
+[[bin]]
+name = "server"
 path = "app/server.rs"
 
 [[bin]]

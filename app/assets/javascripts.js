@@ -1,2 +1,2 @@
 jQuery = require('jquery');
-react = require('react');
+React = require('react');
