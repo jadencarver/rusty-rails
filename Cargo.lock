@@ -22,6 +22,7 @@ dependencies = [
  "serde 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "staticfile 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "websocket 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -88,6 +89,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "byteorder"
 version = "0.3.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "byteorder"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -1016,6 +1022,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "websocket"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "bitflags 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hyper 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "net2 0.2.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "openssl 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "unicase 1.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "url 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

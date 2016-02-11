@@ -5,7 +5,7 @@ pub fn index() -> String {
 		article {
 			section {
 				figure img style="height: 100pt; float: left; margin-right: 3rem; margin-top: 1rem;" src="/assets/cowboy-hat.svg"
-				h1 "Rusty Rails Toasty"
+				h1 "Rusty Rails"
 				p "You are riding Rusty Rails!"
 			}
 			section {}
