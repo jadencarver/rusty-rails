@@ -25,9 +25,6 @@ fn main() {
             println!("Compiling assets...");
             std::fs::create_dir_all("public/assets").ok();
 
-            tasks::javascripts::compile();
-            tasks::stylesheets::compile();
-
             for file in glob("app/assets/images/*").unwrap() {
                 let path = file.unwrap();
                 let dest = format!("public/assets/{}", path.file_name().unwrap().to_str().unwrap());
@@ -36,6 +33,9 @@ fn main() {
                     Err(msg) => println!("- error: {}", msg)
                 }
             }
+
+            tasks::stylesheets::compile();
+            tasks::javascripts::compile();
 
         },
         _ => {

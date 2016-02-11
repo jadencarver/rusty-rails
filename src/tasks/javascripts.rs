@@ -35,7 +35,7 @@ pub fn compile() {
         let source_map = format!("--source-map={}.map", dest);
 
         Command::new("cjsc").arg("-C").arg("vendor/assets/cjsc.config")
-            .arg(path.clone()).arg("-M")
+            .arg(path.clone()) //.arg("-M")
             .arg("-o").arg(dest).arg(source_map)
             .status().unwrap();
     }
