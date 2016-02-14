@@ -43,6 +43,7 @@ fn main() {
                     Err(_) => break 'flush
                 }
             }
+            println!("{}[2J", 27 as char);
             Command::new("cargo").arg("build").arg("--bin").arg("server").status().unwrap();
             server_tx.send(()).unwrap();
         }

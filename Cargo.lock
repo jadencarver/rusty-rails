@@ -17,7 +17,7 @@ dependencies = [
  "params 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "persistent 0.0.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "r2d2_postgres 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "r2d2-diesel 0.5.0 (git+https://github.com/sgrif/r2d2-diesel.git)",
  "router 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -80,11 +80,6 @@ dependencies = [
  "plugin 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
-
-[[package]]
-name = "bufstream"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "byteorder"
@@ -298,11 +293,6 @@ dependencies = [
 [[package]]
 name = "glob"
 version = "0.2.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "hex"
-version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -620,37 +610,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "phf"
-version = "0.7.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "phf_shared 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "phf_codegen"
-version = "0.7.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "phf_generator 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "phf_shared 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "phf_generator"
-version = "0.7.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "phf_shared 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "rand 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "phf_shared"
-version = "0.7.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
 name = "pkg-config"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -669,20 +628,6 @@ version = "1.4.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "tempdir 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "postgres"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "bufstream 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "hex 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "net2 0.2.21 (registry+https://github.com/rust-lang/crates.io-index)",
- "phf 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "phf_codegen 0.7.12 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -721,11 +666,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "r2d2_postgres"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+name = "r2d2-diesel"
+version = "0.5.0"
+source = "git+https://github.com/sgrif/r2d2-diesel.git#a9a1b7e2f6d9bfe9fc4b55ff6e1117b1ba5761b5"
 dependencies = [
- "postgres 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "diesel 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
