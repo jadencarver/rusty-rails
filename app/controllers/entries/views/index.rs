@@ -17,7 +17,7 @@ pub fn index(entries: Vec<Entry>) -> String {
             }
         }
 
-    });
+    }).unwrap();
 
     body
 

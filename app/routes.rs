@@ -8,6 +8,7 @@ pub fn routes() -> Router {
         get "/" => pages::index,
         get "/entries" => entries::index,
         get "/entries/:id" => entries::show,
+        get "/doc/*/*" => Static::new(Path::new("target/doc")),
         get "/*" => Static::new(Path::new("public"))
     )
 }

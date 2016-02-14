@@ -18,11 +18,7 @@ use iron::{Iron, Chain};
 use logger::Logger;
 use ansi_term::Colour::*;
 use dotenv::dotenv;
-
 use std::env;
-use iron::typemap::Key;
-use r2d2::Pool;
-use r2d2_diesel::ConnectionManager;
 
 mod routes;
 pub mod controllers;
@@ -34,18 +30,23 @@ pub mod helpers;
 pub type DBType = diesel::pg::PgConnection;
 
 pub struct DB;
-impl Key for DB { type Value = Pool<ConnectionManager<DBType>>; }
+impl iron::typemap::Key for DB { type Value = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>; }
 
 fn main() {
     dotenv().ok();
-    let hostname = env::var("HOSTNAME").expect("HOSTNAME must be set");
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let manager = ConnectionManager::<DBType>::new(database_url);
-    let pool = Pool::new(r2d2::Config::default(), manager).expect("Database connection failed.");
+    let hostname = env::var("HOSTNAME")
+        .expect("HOSTNAME must be set");
+    let mut chain = Chain::new(routes::routes());
+
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set");
+
+    let manager = r2d2_diesel::ConnectionManager::<DBType>::new(database_url);
+    let pool = r2d2::Pool::new(r2d2::Config::default(), manager)
+        .expect("Database connection failed.");
+    chain.link(persistent::Read::<DB>::both(pool));
 
     let (logger_before, logger_after) = Logger::new(None);
-    let mut chain = Chain::new(routes::routes());
-    chain.link(persistent::Read::<DB>::both(pool));
     chain.link_before(logger_before).link_after(logger_after);
 
     match Iron::new(chain).http(&hostname[..]) {

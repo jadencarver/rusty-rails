@@ -5,7 +5,3 @@ pub struct Entry {
   pub body: String,
   pub public: bool
 }
-
-impl Entry {
-    
-}

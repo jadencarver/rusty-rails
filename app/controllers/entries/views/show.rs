@@ -9,7 +9,7 @@ pub fn show(entry: Entry) -> String {
             h2 $(entry.title)
             $(simple_format(entry.body))
         }
-    });
+    }).unwrap();
 
     body
 }
