@@ -1,6 +1,6 @@
 use maud::PreEscaped;
 
-pub fn application(body: String) -> String {
+pub fn application(body: PreEscaped<String>) -> String {
   let mut page = String::new();
 
   html!(page, {
@@ -10,9 +10,7 @@ pub fn application(body: String) -> String {
         link rel="stylesheet" href="/assets/stylesheets.css" /
         script src="/assets/javascripts.js" {}
       }
-      body {
-        $PreEscaped(body)
-      }
+      body $body
     }
   }).unwrap();
 

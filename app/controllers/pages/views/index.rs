@@ -1,4 +1,6 @@
-pub fn index() -> String {
+use maud::PreEscaped;
+
+pub fn index() -> PreEscaped<String> {
 	let mut body = String::new();
 
 	html!(body, {
@@ -53,5 +55,5 @@ pub fn index() -> String {
 		}
 	}).unwrap();
 
-	body
+	PreEscaped(body)
 }

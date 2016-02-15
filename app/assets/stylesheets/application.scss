@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   line-height: 2rem;
+  box-sizing: border-box;
 }
 
 body {
@@ -87,5 +88,36 @@ article, form, .container {
   }
   > section ~ section {
     padding-bottom: 4rem;
+  }
+}
+
+label {
+  display: inline-block;
+  min-width: 100pt;
+}
+
+input, textarea {
+  border: solid $color5 2pt;
+  background-color: $color2;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+  &:focus {
+    background-color: #FFFFFF;
+    border-color: $color4;
+    outline: none;
+  }
+}
+
+input[type=text] {
+  min-width: 200pt;
+}
+
+input[type=submit] {
+  cursor: pointer;
+  background-color: lighten($color5, 10%);
+  color: #FFFFFF;
+  &:active {
+    border-color: darken($color4, 10%);
+    background-color: $color4;
   }
 }

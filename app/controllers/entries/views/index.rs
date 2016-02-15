@@ -1,7 +1,8 @@
+use maud::PreEscaped;
 use models::entry::Entry;
 use helpers::view::simple_format;
 
-pub fn index(entries: Vec<Entry>) -> String {
+pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
     let mut body = String::new();
 
     html!(body, {
@@ -19,6 +20,5 @@ pub fn index(entries: Vec<Entry>) -> String {
 
     }).unwrap();
 
-    body
-
+    PreEscaped(body)
 }

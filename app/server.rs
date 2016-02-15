@@ -1,18 +1,45 @@
 #![feature(custom_derive, custom_attribute, plugin)]
 #![plugin(maud_macros, diesel_codegen, dotenv_macros)]
 
+/// # Rusty Rails uses the Iron Framework
+///
+///
 extern crate iron;
 #[macro_use] extern crate router;
 extern crate logger;
-extern crate maud;
 extern crate staticfile;
-extern crate ansi_term;
 
+/// ## Maud for Templating is Schweet
+///
+/// html!(buffer, {
+///   html {
+///     body {
+///       h1 "Hello World!"
+///       p class="leading" style="font-size: 1.1rem;" {
+///         $first_paragraph
+///       }
+///       p $(second_paragraph)
+///     }
+///   }
+/// }
+extern crate maud;
+
+/// ## Diesel provides an ORM (PostgreSQL/SQLLite)
+/// 
+/// If you'd rather use plain SQL, it can easily be swapped out for the r2d2-postgres and postgres
+/// cargo packages.
+///
 #[macro_use] extern crate diesel;
+extern crate ansi_term;
 extern crate dotenv;
 extern crate persistent;
 extern crate r2d2;
 extern crate r2d2_diesel;
+
+/// You can change also change the type of database used by the connection pool.
+pub type DBType = diesel::pg::PgConnection;
+pub struct DB;
+impl iron::typemap::Key for DB { type Value = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>; }
 
 use iron::{Iron, Chain};
 use logger::Logger;
@@ -20,27 +47,67 @@ use ansi_term::Colour::*;
 use dotenv::dotenv;
 use std::env;
 
+/// ### Routing and MVC
+/// The design of Rusty Rails is inspired by (obviously) Ruby on Rails, so it should be instantly
+/// familiar to you.  One big difference is that I prefer my views folders to sit right next to
+/// their controllers.  It may be helpful for readers to familiarize themselves with the Rust
+/// pattern for modularizing code.  Basically, you can create files with their module name,
+/// (like `controllers/entries.rs` maps to `controllers::entries`) or you can break it down even further by creating a
+/// folder containing at least this one file `controllers/entries/mod.rs`.
+///
+/// Iron's router is really easy to use, and you can manage them inside `app/routes.rs`.  The final
+/// route serves static assets.  If you don't want to (like in a production environment, behind
+/// nginx, then feel free to remove it, but it is harmless either way.
+/// 
+/// ```
+/// router!(
+///    // root
+///    get "/" => pages::index,
+///
+///    // RESTful
+///    get "/entries" => entries::index,
+///    get "/entries/new" => entries::new,
+///    get "/entries/:id" => entries::show,
+///    get "/entries/:id/edit" => entries::edit,
+///    patch "/entries/:id" => entries::update,
+///    delete "/entries/:id" => entries::delete,
+///
+///    // Static
+///    get "/*" => Static::new(Path::new("public"))
+/// )
+/// ```
 mod routes;
+
+/// ### Controllers
+/// Controller functions (marked `pub`) are expected to respond to each request with an
+/// appropriate status code, content-type and body.
+///
 pub mod controllers;
-pub mod models;
-pub mod layouts;
-pub mod schema;
+
+/// ### Helpers
+/// Various helpers are available, and custom helpers can be defined in app/helpers.
 pub mod helpers;
+/// Define your layout in `layouts.rs` multiple layouts can be defined, or broken up into a
+/// module inside of the `layouts/` folder.
+pub mod layouts;
 
-pub type DBType = diesel::pg::PgConnection;
-
-pub struct DB;
-impl iron::typemap::Key for DB { type Value = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>; }
+pub mod schema;
+pub mod models;
 
 fn main() {
+    
+    // Provide secrets and environment variables using `.env`
     dotenv().ok();
     let hostname = env::var("HOSTNAME")
         .expect("HOSTNAME must be set");
-    let mut chain = Chain::new(routes::routes());
 
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
 
+    // Iron acts as the router and middleware chain.
+    let mut chain = Chain::new(routes::routes());
+
+    // Iron and r2d2 provide persistent database connection pooling for all requests.
     let manager = r2d2_diesel::ConnectionManager::<DBType>::new(database_url);
     let pool = r2d2::Pool::new(r2d2::Config::default(), manager)
         .expect("Database connection failed.");
