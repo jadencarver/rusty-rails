@@ -14,7 +14,6 @@ pub fn routes() -> Router {
         patch "/entries/:id" => entries::update,
          post "/entries/:id" => entries::update,
         delete "/entries/:id" => entries::delete,
-          post "/entries/:id" => entries::delete,
         get "/*" => Static::new(Path::new("public"))
     )
 }

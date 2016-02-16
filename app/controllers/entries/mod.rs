@@ -1,6 +1,7 @@
 use iron::{Request, Response, IronResult};
 use iron::status;
 use iron::modifiers::Header;
+use iron::headers;
 use iron::headers::{Location};
 use iron::mime::Mime;
 use router::Router;
@@ -64,7 +65,7 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
     Ok(Response::with((
                 status::Found,
                 Header(Location("/entries".to_string())),
-                "THIS IS A HEY HEY HEY!"
+                Header(headers::Connection::close())
                 )))
 }
 
@@ -72,9 +73,8 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
     let entry = get_entry(request);
     Ok(Response::with((
                 status::Found,
-                "text/html".parse::<Mime>().unwrap(),
-                Header(Location(format!("http://localhost:3000/entries/{}", entry.id))),
-                "THIS IS A HEY HEY HEY!"
+                Header(Location(format!("/entries/{}", entry.id))),
+                Header(headers::Connection::close())
                 )))
 }
 
@@ -82,8 +82,7 @@ pub fn delete(request: &mut Request) -> IronResult<Response> {
     let entry = get_entry(request);
     Ok(Response::with((
                 status::Found,
-                "text/html".parse::<Mime>().unwrap(),
-                Header(Location(format!("http://localhost:3000/entries/{}", entry.id))),
-                "THIS IS A HEY HEY HEY!"
+                Header(Location("/entries/{}".to_string())),
+                Header(headers::Connection::close())
                 )))
 }

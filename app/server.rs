@@ -8,6 +8,7 @@ extern crate iron;
 #[macro_use] extern crate router;
 extern crate logger;
 extern crate staticfile;
+extern crate params;
 
 /// ## Maud for Templating is Schweet
 ///
