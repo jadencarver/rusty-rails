@@ -10,9 +10,11 @@ pub fn routes() -> Router {
         get "/entries/new" => entries::new,
         get "/entries/:id" => entries::show,
         get "/entries/:id/edit" => entries::edit,
+        post "/entries" => entries::create,
         patch "/entries/:id" => entries::update,
-        post "/entries/:id" => entries::update,
-        //delete "/entries/:id" => entries::delete,
+         post "/entries/:id" => entries::update,
+        delete "/entries/:id" => entries::delete,
+          post "/entries/:id" => entries::delete,
         get "/*" => Static::new(Path::new("public"))
     )
 }

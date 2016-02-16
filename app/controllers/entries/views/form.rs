@@ -44,7 +44,7 @@ fn form(entry: Entry) -> PreEscaped<String> {
 
         div class="field" {
             label for="entry_body" "Body"
-            input id="entry_body" type="text" name="entry[body]" value=$(entry.body) /
+            textarea id="entry_body" type="text" name="entry[body]" $(entry.body)
         }
 
     }).unwrap();

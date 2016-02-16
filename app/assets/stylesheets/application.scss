@@ -101,6 +101,7 @@ input, textarea {
   background-color: $color2;
   font-size: 1rem;
   padding: 0 0.5rem;
+  vertical-align: top;
   &:focus {
     background-color: #FFFFFF;
     border-color: $color4;
@@ -108,7 +109,7 @@ input, textarea {
   }
 }
 
-input[type=text] {
+input[type=text], textarea {
   min-width: 200pt;
 }
 
