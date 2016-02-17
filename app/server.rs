@@ -42,7 +42,7 @@ pub type DBType = diesel::pg::PgConnection;
 pub struct DB;
 impl iron::typemap::Key for DB { type Value = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>; }
 
-use iron::{Iron, Chain};
+use iron::prelude::*;
 use logger::Logger;
 use ansi_term::Colour::*;
 use dotenv::dotenv;
