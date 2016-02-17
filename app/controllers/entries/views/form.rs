@@ -7,7 +7,7 @@ pub fn new(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
         form action="/entries" method="POST" {
             h2 "Creating Entry"
-                $(form(entry))
+                $(form(entry, errors))
                 div class="actions" {
                     input type="submit" value="Create Entry" /
                 }
@@ -23,16 +23,7 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
         form action=$(format!("/entries/{}", entry.id)) method="POST" {
             h2 "Editing Entry"
-            #if errors.is_some() {
-                ul {
-                    #for (field, messages) in errors.unwrap() {
-                        #for message in messages {
-                            li $(format!("{} {}", field, message))
-                        }
-                    }
-                }
-            }
-            $(form(entry))
+            $(form(entry, errors))
                 div class="actions" {
                     input type="submit" value="Update Entry" /
                 }
@@ -44,9 +35,18 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
 // -- private --
 //
-fn form(entry: Entry) -> PreEscaped<String> {
+fn form(entry: Entry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
     html!(html, {
+        #if errors.is_some() {
+            ul {
+                #for (field, messages) in errors.unwrap() {
+                    #for message in messages {
+                        li $(format!("{} {}", field, message))
+                    }
+                }
+            }
+        }
 
         div class="field" {
             label for="entry_title" "Title"

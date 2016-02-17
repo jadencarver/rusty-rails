@@ -1,19 +1,20 @@
 use iron::prelude::*;
 use diesel::prelude::*;
-use diesel;
 
-use iron::status;
-use iron::modifiers::Header;
 use iron::headers;
 use iron::mime::Mime;
-use router::Router;
-use layouts;
-use params::{Params, Value};
+use iron::modifiers::Header;
+use iron::status;
 
+use persistent::Read;
+use params::Params;
+use router::Router;
+
+use layouts;
 mod views;
+
 use models::entry::Entry;
 use schema::entries::dsl::entries;
-use persistent::Read;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
     let ref connection = *request.extensions.get::<Read<::DB>>().unwrap().get().unwrap();
@@ -50,20 +51,27 @@ pub fn edit(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn create(request: &mut Request) -> IronResult<Response> {
-    Ok(Response::with((status::Found,
-                Header(headers::Location("/entries".to_string())),
-                Header(headers::Connection::close())
-                )))
+    let mut entry = Entry::blank();
+    let params = request.get_ref::<Params>().unwrap();
+    entry.update(params.clone());
+
+    match entry.is_valid() {
+        Ok(entry_id) => Ok(Response::with((status::Found,
+                           Header(headers::Location(format!("/entries/{}", entry_id))),
+                           Header(headers::Connection::close())
+                        ))),
+        Err(errors)  => Ok(Response::with((status::NotAcceptable,
+                           "text/html".parse::<Mime>().unwrap(),
+                           layouts::application(views::form::new(entry, errors))
+                        )))
+    }
 }
 
 pub fn update(request: &mut Request) -> IronResult<Response> {
     let mut entry = get_entry(request);
     let params = request.get_ref::<Params>().unwrap();
-    match params.find(&["entry","title"]).unwrap().clone() {
-        Value::String(title) => entry.title = title,
-        _ => println!("invalid argument")
-    }
-    //entry.body = params.find(&["entry","body"]).unwrap();
+    entry.update(params.clone());
+
     match entry.is_valid() {
         Ok(entry_id) => Ok(Response::with((status::Found,
                            Header(headers::Location(format!("/entries/{}", entry_id))),
