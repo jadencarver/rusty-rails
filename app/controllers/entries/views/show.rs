@@ -7,13 +7,15 @@ pub fn show(entry: Entry) -> PreEscaped<String> {
 
     html!(body, {
         article {
+            section {}
             section {
                 h2 ^(entry.title)
             }
-            ^(simple_format(entry.body))
+            div ^(simple_format(entry.body))
             section {
-                div class="actions" {
-                    a href=^(format!("/entries/{}/edit", entry.id)) "Edit Entry"
+                ul class="actions" {
+                    li a href=^(format!("/entries/{}/edit", entry.id)) "Edit Entry"
+                    li a href="/entries" "View All"
                 }
             }
         }

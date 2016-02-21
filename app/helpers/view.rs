@@ -17,3 +17,8 @@ pub fn simple_format(text: String) -> PreEscaped<String> {
 
     PreEscaped(result)
 }
+
+pub fn truncate(text: String, length: usize) -> String {
+    let t = &text[0..length];
+    t.to_string() + "..."
+}

@@ -1,6 +1,6 @@
 use maud::PreEscaped;
 use models::entry::Entry;
-use helpers::view::simple_format;
+use helpers::view::*;
 
 pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
     let mut body = String::new();
@@ -12,7 +12,7 @@ pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
                 @for entry in entries {
                     article id=^(format!("entry_{:?}", entry.id)) {
                         h4 a href=^(format!("/entries/{:?}", entry.id)) ^(entry.title)
-                            ^(simple_format(entry.body))
+                            ^(simple_format(truncate(entry.body, 175)))
                     }
                 }
             }
