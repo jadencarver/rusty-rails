@@ -12,6 +12,10 @@ body {
   line-height: 1em;
 }
 
+a[href] {
+  color: $color1;
+}
+
 h1, h2, h3 {
   font-family: $font1;
   line-height: 4rem;
@@ -111,6 +115,12 @@ input, textarea {
 
 input[type=text], textarea {
   min-width: 200pt;
+  width: 100%;
+  width: calc(100% - 100pt);
+}
+
+textarea {
+  height: 200pt;
 }
 
 input[type=submit] {
