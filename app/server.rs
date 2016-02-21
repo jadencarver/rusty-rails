@@ -17,9 +17,9 @@ extern crate params;
 ///     body {
 ///       h1 "Hello World!"
 ///       p class="leading" style="font-size: 1.1rem;" {
-///         $first_paragraph
+///         @first_paragraph
 ///       }
-///       p $(second_paragraph)
+///       p @(second_paragraph)
 ///     }
 ///   }
 /// }

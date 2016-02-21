@@ -1,4 +1,12 @@
-#[derive(Queryable,Clone)]
+use diesel::prelude::*;
+use schema::entries;
+use std::collections::HashMap;
+pub type Errors = Option<HashMap<&'static str, Vec<&'static str>>>;
+use params::{Map, Value};
+
+#[derive(Queryable)]
+#[insertable_into(entries)]
+#[changeset_for(entries)]
 pub struct Entry {
   pub id: i32,
   pub title: String,
@@ -6,13 +14,15 @@ pub struct Entry {
   pub public: bool
 }
 
-use std::collections::HashMap;
-pub type Errors = Option<HashMap<&'static str, Vec<&'static str>>>;
-
-use params::{Map, Value};
+#[insertable_into(entries)]
+pub struct NewEntry {
+  pub title: String,
+  pub body: String,
+  pub public: bool
+}
 
 impl Entry {
-    pub fn blank() -> Entry {
+    pub fn new() -> Entry {
         Entry {
             id: 0,
             title: "Hello!".to_string(),

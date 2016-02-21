@@ -9,10 +9,10 @@ pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
 
         ul class="container" {
             li {
-                #for entry in entries {
-                    article id=$(format!("entry_{:?}", entry.id)) {
-                        h4 a href=$(format!("/entries/{:?}", entry.id)) $(entry.title)
-                            $(simple_format(entry.body))
+                @for entry in entries {
+                    article id=^(format!("entry_{:?}", entry.id)) {
+                        h4 a href=^(format!("/entries/{:?}", entry.id)) ^(entry.title)
+                            ^(simple_format(entry.body))
                     }
                 }
             }

@@ -7,7 +7,7 @@ pub fn new(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
         form action="/entries" method="POST" {
             h2 "Creating Entry"
-                $(form(entry, errors))
+                ^(form(entry, errors))
                 div class="actions" {
                     input type="submit" value="Create Entry" /
                 }
@@ -21,9 +21,9 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
     html!(html, {
 
-        form action=$(format!("/entries/{}", entry.id)) method="POST" {
+        form action=^(format!("/entries/{}", entry.id)) method="POST" {
             h2 "Editing Entry"
-            $(form(entry, errors))
+            ^(form(entry, errors))
                 div class="actions" {
                     input type="submit" value="Update Entry" /
                 }
@@ -38,11 +38,11 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
 fn form(entry: Entry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
     html!(html, {
-        #if errors.is_some() {
+        @if errors.is_some() {
             ul {
-                #for (field, messages) in errors.unwrap() {
-                    #for message in messages {
-                        li $(format!("{} {}", field, message))
+                @for (field, messages) in errors.unwrap() {
+                    @for message in messages {
+                        li ^(format!("{} {}", field, message))
                     }
                 }
             }
@@ -50,12 +50,12 @@ fn form(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
         div class="field" {
             label for="entry_title" "Title"
-                input id="entry_title" type="text" name="entry[title]" value=$(entry.title) /
+                input id="entry_title" type="text" name="entry[title]" value=^(entry.title) /
         }
 
         div class="field" {
             label for="entry_body" "Body"
-                textarea id="entry_body" type="text" name="entry[body]" $(entry.body)
+                textarea id="entry_body" type="text" name="entry[body]" ^(entry.body)
         }
 
     }).unwrap();

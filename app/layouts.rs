@@ -10,7 +10,7 @@ pub fn application(body: PreEscaped<String>) -> String {
         link rel="stylesheet" href="/assets/stylesheets.css" /
         script src="/assets/javascripts.js" {}
       }
-      body $body
+      body ^(body)
     }
   }).unwrap();
 
