@@ -92,6 +92,7 @@ pub mod helpers;
 /// module inside of the `layouts/` folder.
 pub mod layouts;
 
+pub mod formats;
 pub mod schema;
 pub mod models;
 

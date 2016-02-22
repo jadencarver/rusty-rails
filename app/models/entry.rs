@@ -42,14 +42,14 @@ impl NewEntry {
         }
     }
 
-    pub fn is_valid(&mut self) -> Result<i32, Errors> {
+    pub fn is_valid(&mut self) -> Result<bool, Errors> {
         let mut errors = HashMap::new();
 
         if self.title.is_empty() { errors.insert("title", vec!["can't be blank"]); }
         if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
 
         if errors.is_empty() {
-            Ok(0)
+            Ok(true)
         } else {
             Err(Some(errors))
         }
@@ -76,14 +76,14 @@ impl Entry {
         }
     }
 
-    pub fn is_valid(&mut self) -> Result<i32, Errors> {
+    pub fn is_valid(&mut self) -> Result<bool, Errors> {
         let mut errors = HashMap::new();
 
         if self.title.is_empty() { errors.insert("title", vec!["can't be blank"]); }
         if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
 
         if errors.is_empty() {
-            Ok(self.id)
+            Ok(true)
         } else {
             Err(Some(errors))
         }
