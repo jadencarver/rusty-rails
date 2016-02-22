@@ -1,13 +1,13 @@
 use maud::PreEscaped;
-use models::entry::{Entry, Errors};
+use models::entry::{NewEntry, Entry, Errors};
 
-pub fn new(entry: Entry, errors: Errors) -> PreEscaped<String> {
+pub fn new(entry: NewEntry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
     html!(html, {
 
         form action="/entries" method="POST" {
             h2 "Creating Entry"
-                ^(form(entry, errors))
+                ^(form(entry.to_generic(), errors))
                 div class="actions" {
                     input type="submit" value="Create Entry" /
                 }

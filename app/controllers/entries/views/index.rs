@@ -18,6 +18,12 @@ pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
             }
         }
 
+        section {
+            ul class="actions" {
+                li a href="/entries/new" "New Entry"
+            }
+        }
+
     }).unwrap();
 
     PreEscaped(body)

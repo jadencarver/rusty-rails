@@ -21,12 +21,46 @@ pub struct NewEntry {
   pub public: bool
 }
 
-impl Entry {
-    pub fn new() -> Entry {
+impl NewEntry {
+    pub fn to_generic(self) -> Entry {
         Entry {
             id: 0,
-            title: "Hello!".to_string(),
-            body: "".to_string(),
+            title: self.title,
+            body: self.body,
+            public: self.public
+        }
+    }
+
+    pub fn update(&mut self, params: Map) {
+        match params.find(&["entry","title"]).unwrap().clone() {
+            Value::String(title) => self.title = title,
+            _ => {}
+        }
+        match params.find(&["entry","body"]).unwrap().clone() {
+            Value::String(body) => self.body = body,
+            _ => {}
+        }
+    }
+
+    pub fn is_valid(&mut self) -> Result<i32, Errors> {
+        let mut errors = HashMap::new();
+
+        if self.title.is_empty() { errors.insert("title", vec!["can't be blank"]); }
+        if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
+
+        if errors.is_empty() {
+            Ok(0)
+        } else {
+            Err(Some(errors))
+        }
+    }
+}
+
+impl Entry {
+    pub fn new() -> NewEntry {
+        NewEntry {
+            title: String::new(),
+            body: String::new(),
             public: false
         }
     }
@@ -49,9 +83,10 @@ impl Entry {
         if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
 
         if errors.is_empty() {
-            Ok(self.id)
+            Ok(0)
         } else {
             Err(Some(errors))
         }
     }
+
 }

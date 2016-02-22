@@ -14,7 +14,7 @@ use layouts;
 mod views;
 
 use diesel;
-use models::entry::Entry;
+use models::entry::{NewEntry, Entry};
 use schema::entries::dsl::entries;
 
 fn get_entry(request: &Request) -> Entry {
@@ -71,9 +71,9 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
 
     match entry.is_valid() {
         Ok(entry_id) => {
-            diesel::insert(&entry).into(entries).execute(connection).unwrap();
+            let new_entry: Entry = diesel::insert(&entry).into(entries).get_result(connection).unwrap();
             Ok(Response::with((status::Found,
-                               Header(headers::Location(format!("/entries/{}", entry_id))),
+                               Header(headers::Location(format!("/entries/{}", new_entry.id))),
                                Header(headers::Connection::close())
                               )))
         },

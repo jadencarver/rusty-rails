@@ -48,7 +48,7 @@ ul, ol {
   float: left;
 }
 
-article, form, .container {
+article, form, .container, body > section {
   > * {
     list-style-type: none;
     max-width: 980px;
