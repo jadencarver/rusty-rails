@@ -83,7 +83,7 @@ impl Entry {
         if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
 
         if errors.is_empty() {
-            Ok(0)
+            Ok(self.id)
         } else {
             Err(Some(errors))
         }
