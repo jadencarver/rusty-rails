@@ -1,13 +1,16 @@
 use iron::prelude::*;
 use diesel::prelude::*;
+use std::sync::Arc;
+use r2d2;
+use r2d2_diesel;
 
 use iron::headers;
 use iron::modifiers::*;
 use iron::status;
 
 use persistent::Read;
-use params::{Params, Value};
-use router::Router;
+use params;
+use router;
 
 use layouts;
 use formats;
@@ -17,29 +20,31 @@ use diesel;
 use models::entry::Entry;
 use schema::entries::dsl::entries;
 
-const PER_PAGE: i64 = 5;
+type Pool = Arc<r2d2::Pool<r2d2_diesel::ConnectionManager<diesel::pg::PgConnection>>>;
 
-fn get_entry(request: &Request) -> Entry {
-    let pool = request.extensions.get::<Read<::DB>>().unwrap();
-    let ref connection = *pool.get().unwrap();
-
-    let params = request.extensions.get::<Router>().unwrap();
-    let id = params.find("id").unwrap().parse::<i32>().unwrap();
-    entries.find(id).first::<Entry>(connection).expect("Error loading entry")
+fn process<'a>(request: &mut Request) -> (
+    router::Params, params::Map, Pool) {
+    (
+        request.extensions.get::<router::Router>().unwrap().clone(),
+        request.get::<params::Params>().unwrap().clone(),
+        request.extensions.get::<Read<::DB>>().unwrap().clone()
+    )
 }
 
 //----
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
-    let ref connection = *request.extensions.get::<Read<::DB>>().unwrap().get().unwrap();
-    let params = request.get_ref::<Params>().unwrap();
-    let page = match params.find(&["p"]).unwrap_or(&Value::Null).clone() {
-        Value::String(title) => title.parse::<i64>().unwrap(),
+    let (route, params, pool) = process(request);
+    let ref db = *pool.get().unwrap();
+
+    let entries_per_page: i64 = 5;
+    let page = match params.find(&["p"]).unwrap_or(&params::Value::Null).clone() {
+        params::Value::String(title) => title.parse::<i64>().unwrap(),
         _ => 0
     };
-    let query = entries.limit(PER_PAGE).offset(page*PER_PAGE);
-    let index = query.get_results::<Entry>(connection).expect("Error loading entries");
-    let num_pages = entries.count().get_result::<i64>(connection).unwrap_or(0) / PER_PAGE;
+    let query = entries.limit(entries_per_page).offset(page*entries_per_page);
+    let index = query.get_results::<Entry>(db).expect("Error loading entries");
+    let num_pages = entries.count().get_result::<i64>(db).unwrap_or(0) / entries_per_page;
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
@@ -56,7 +61,10 @@ pub fn new(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn show(request: &mut Request) -> IronResult<Response> {
-    let entry = get_entry(request);
+    let (route, params, pool) = process(request);
+    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let ref connection = *pool.get().unwrap();
+    let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::application(views::show::show(entry))
@@ -64,7 +72,10 @@ pub fn show(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {
-    let entry = get_entry(request);
+    let (route, params, pool) = process(request);
+    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let ref connection = *pool.get().unwrap();
+    let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::application(views::form::edit(entry, None))
@@ -72,8 +83,7 @@ pub fn edit(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn create(request: &mut Request) -> IronResult<Response> {
-    let params = request.get_ref::<Params>().unwrap().clone();
-    let pool = request.extensions.get::<Read<::DB>>().unwrap();
+    let (route, params, pool) = process(request);
     let ref connection = *pool.get().unwrap();
     let mut entry = Entry::new();
     entry.update(params);
@@ -96,19 +106,16 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn update(request: &mut Request) -> IronResult<Response> {
-    let form_data = request.get_ref::<Params>().unwrap().clone();
-    let params = request.extensions.get::<Router>().unwrap();
-    let pool = request.extensions.get::<Read<::DB>>().unwrap();
+    let (route, params, pool) = process(request);
     let ref connection = *pool.get().unwrap();
 
-    let id = params.find("id").unwrap().parse::<i32>().unwrap();
-
+    let id = route.find("id").unwrap().parse::<i32>().unwrap();
     let mut entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
-    entry.update(form_data);
-    entry.save_changes::<Entry>(&connection).unwrap();
+    entry.update(params);
 
     match entry.is_valid() {
         Ok(_) => {
+            entry.save_changes::<Entry>(connection).unwrap();
             Ok(Response::with((status::Found,
                                Header(headers::Location(format!("/entries/{}", entry.id))),
                                Header(headers::Connection::close())
@@ -123,7 +130,8 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
     }
 }
 
-pub fn delete(_: &mut Request) -> IronResult<Response> {
+pub fn delete(request: &mut Request) -> IronResult<Response> {
+    let (route, params, pool) = process(request);
     //let mut entry = get_entry(request);
     //entry.delete();
     Ok(Response::with((

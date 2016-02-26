@@ -4,8 +4,8 @@ use staticfile::Static;
 use std::path::Path;
 use std::time::Duration;
 
-
 pub fn routes() -> Router {
+    let cache_duration = Duration::from_secs(30*24*60*60);
     router!(
         get "/" => pages::index,
         get "/entries" => entries::index,
@@ -16,6 +16,6 @@ pub fn routes() -> Router {
         patch "/entries/:id" => entries::update,
          post "/entries/:id" => entries::update,
         delete "/entries/:id" => entries::delete,
-        get "/*" => Static::new(Path::new("public")).cache(Duration::from_secs(30*24*60*60))
+        get "/*" => Static::new(Path::new("public")).cache(cache_duration)
     )
 }
