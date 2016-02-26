@@ -39,8 +39,10 @@ extern crate r2d2_diesel;
 
 /// You can change also change the type of database used by the connection pool.
 pub type DBType = diesel::pg::PgConnection;
+pub type DBPool = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>;
+pub type DBPoolRef = std::sync::Arc<DBPool>;
 pub struct DB;
-impl iron::typemap::Key for DB { type Value = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>; }
+impl iron::typemap::Key for DB { type Value = DBPool; }
 
 use iron::prelude::*;
 use logger::Logger;

@@ -1,8 +1,5 @@
 use iron::prelude::*;
 use diesel::prelude::*;
-use std::sync::Arc;
-use r2d2;
-use r2d2_diesel;
 
 use iron::headers;
 use iron::modifiers::*;
@@ -20,10 +17,8 @@ use diesel;
 use models::entry::Entry;
 use schema::entries::dsl::entries;
 
-type Pool = Arc<r2d2::Pool<r2d2_diesel::ConnectionManager<diesel::pg::PgConnection>>>;
-
-fn process<'a>(request: &mut Request) -> (
-    router::Params, params::Map, Pool) {
+fn process(request: &mut Request) -> (
+    router::Params, params::Map, ::DBPoolRef) {
     (
         request.extensions.get::<router::Router>().unwrap().clone(),
         request.get::<params::Params>().unwrap().clone(),
