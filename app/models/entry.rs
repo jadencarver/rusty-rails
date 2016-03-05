@@ -32,6 +32,7 @@ impl NewEntry {
     }
 
     pub fn update(&mut self, params: Map) {
+        // params[:entry][:title]
         match params.find(&["entry","title"]).unwrap().clone() {
             Value::String(title) => self.title = title,
             _ => {}

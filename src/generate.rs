@@ -1,17 +1,18 @@
-extern crate argparse;
-use argparse::{ArgumentParser, StoreTrue, Store};
+extern crate clap;
+use clap::{Arg, App, SubCommand};
 
 fn main() {
-  let mut command = String::new();
-  {  // this block limits scope of borrows by ap.refer() method
-    let mut ap = ArgumentParser::new();
-    ap.set_description("Code generation tool for Rapid Application Development");
-    ap.refer(&mut command).add_argument("generator", Store, "Generator to Run");
-    ap.parse_args_or_exit();
-  }
+    let args = App::new("Rusty Rails").version(env!("CARGO_PKG_VERSION"))
+        .about("Code generation tool for Rapid Application Development")
+        .subcommand(SubCommand::with_name("scaffold").about("Generates a full RESTful resource")
+                    .arg(Arg::with_name("resource").help("a name for the resource").required(true))
+                    .arg(Arg::with_name("fields").help("attributes like name:String"))
+                   )
+        .get_matches();
 
-  match command.as_ref() {
-    "scaffold" => println!("Scaffold"),
-    _ => println!("Unknown command {}", command)
-  }
+    match args.subcommand_name() {
+        Some("scaffold") => println!("Scaffold generator started"),
+        _ => {}
+    }
+
 }

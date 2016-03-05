@@ -1,6 +1,3 @@
-use diesel;
-use diesel::prelude::*;
-
 use iron::prelude::*;
 use iron::modifiers::*;
 use iron::headers;
@@ -12,6 +9,8 @@ use formats;
 mod views;
 use params;
 
+use diesel;
+use diesel::prelude::*;
 use models::entry::Entry;
 use schema::entries::dsl::entries;
 
@@ -19,13 +18,14 @@ use schema::entries::dsl::entries;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = params(request);
-    let ref db = *pool.get().unwrap();
 
     let entries_per_page: i64 = 5;
     let page = match params.find(&["p"]).unwrap_or(&params::Value::Null).clone() {
         params::Value::String(page) => page.parse::<i64>().unwrap(),
         _ => 0
     };
+
+    let ref db = *pool.get().unwrap();
     let query = entries.limit(entries_per_page).offset(page*entries_per_page);
     let index = query.get_results::<Entry>(db).expect("Error loading entries");
     let num_pages = entries.count().get_result::<i64>(db).unwrap_or(0) / entries_per_page;
@@ -33,14 +33,6 @@ pub fn index(request: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::application(views::index::index(index, page, num_pages))
-                      )))
-}
-
-pub fn new(_: &mut Request) -> IronResult<Response> {
-    let entry = Entry::new();
-    Ok(Response::with((status::Ok,
-                       Header(formats::html()),
-                       layouts::application(views::form::new(entry, None))
                       )))
 }
 
@@ -52,6 +44,14 @@ pub fn show(request: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::application(views::show::show(entry))
+                      )))
+}
+
+pub fn new(_: &mut Request) -> IronResult<Response> {
+    let entry = Entry::new();
+    Ok(Response::with((status::Ok,
+                       Header(formats::html()),
+                       layouts::application(views::form::new(entry, None))
                       )))
 }
 

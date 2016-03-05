@@ -11,7 +11,7 @@ params = "^0.0.2"
 maud = { git = "https://github.com/lfairy/maud.git" }
 maud_macros = { git = "https://github.com/lfairy/maud.git" }
 logger = "^0.0.3"
-argparse = "^0.2"
+clap = "^2.1.2"
 staticfile = { version = "^0.1", features = ["cache"] }
 glob = "^0.2.10"
 diesel = "^0.5.0"
