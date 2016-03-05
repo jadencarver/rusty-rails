@@ -1,27 +1,23 @@
-extern crate argparse;
+extern crate clap;
 extern crate glob;
 
-use std::fs;
-use argparse::{ArgumentParser, StoreTrue, Store};
+use clap::{Arg, App, SubCommand};
 use glob::glob;
+use std::fs;
 
 mod tasks;
 
 fn main() {
-    let mut verbose = false;
-    let mut command = String::new();
-    {  // this block limits scope of borrows by ap.refer() method
-        let mut ap = ArgumentParser::new();
-        ap.set_description("Runs tasks related to managing a Rusty Rails environment");
-        ap.refer(&mut command).add_argument("command", Store, "Command to Run");
-        ap.refer(&mut verbose).add_option(&["-v", "--verbose"], StoreTrue, "Verbose output");
-        ap.parse_args_or_exit();
-    }
+    let args = App::new("Rusty Rails").version(env!("CARGO_PKG_VERSION"))
+        .about("Runs tasks related to managing your Rusty Rails environment")
+        .arg(Arg::with_name("verbose").short("v").help("Verbose output"))
 
-    if verbose { println!("Running command {}", command); }
-    match command.as_ref() {
-        "assets" => {
+        .subcommand(SubCommand::with_name("assets").about("Compiles Assets"))
 
+        .get_matches();
+
+    match args.subcommand_name() {
+        Some("assets") => {
             println!("Compiling assets...");
             std::fs::create_dir_all("public/assets").ok();
 
@@ -38,9 +34,8 @@ fn main() {
             tasks::javascripts::compile();
 
         },
-        _ => {
-            println!("Unknown command: {}", command);
-            std::process::exit(1);
-        }
+        Some(other_task) => println!("Unknown task {}", other_task),
+        None => println!("Please specify a task to run")
     }
+
 }

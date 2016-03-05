@@ -45,9 +45,12 @@ pub struct DB;
 impl iron::typemap::Key for DB { type Value = DBPool; }
 
 use iron::prelude::*;
-use logger::Logger;
+use iron::modifiers::*;
 use ansi_term::Colour::*;
 use dotenv::dotenv;
+use iron::AfterMiddleware;
+use iron::status;
+use logger::Logger;
 use std::env;
 
 /// ### Routing and MVC
@@ -97,6 +100,17 @@ pub mod layouts;
 pub mod formats;
 pub mod schema;
 pub mod models;
+mod errors;
+
+struct ErrorHandler;
+impl AfterMiddleware for ErrorHandler {
+    fn catch(&self, _: &mut Request, error: IronError) -> IronResult<Response> {
+        Ok(Response::with((status::Ok,
+                           Header(formats::html()),
+                           layouts::application(errors::default(error))
+                          )))
+    }
+}
 
 fn main() {
     
@@ -119,6 +133,7 @@ fn main() {
 
     let (logger_before, logger_after) = Logger::new(None);
     chain.link_before(logger_before).link_after(logger_after);
+    chain.link_after(ErrorHandler);
 
     match Iron::new(chain).http(&hostname[..]) {
         Ok(_) => println!("Started on {}", Green.bold().paint(hostname)),

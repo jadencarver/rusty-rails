@@ -4,6 +4,7 @@ extern crate glob;
 
 use ansi_term::Colour::*;
 use notify::{RecommendedWatcher, Watcher};
+use std::path::Path;
 use std::process::Command;
 use std::sync::mpsc::channel;
 use std::thread;
@@ -16,6 +17,9 @@ fn main() {
     let (builder_tx, builder_rx) = channel();
     let (js_assets_tx, js_assets_rx) = channel();
     let (css_assets_tx, css_assets_rx) = channel();
+    let server_path = Path::new("./target/debug/server");
+
+    builder_tx.send(()).unwrap();
 
     let watcher = thread::spawn(move || {
         let mut watcher_fs: RecommendedWatcher = Watcher::new(watcher_tx).unwrap();
@@ -65,7 +69,7 @@ fn main() {
     let server = thread::spawn(move || {
         loop {
             println!("{} Rusty Rails", Green.bold().paint("Starting"));
-            match Command::new("./target/debug/server").spawn() {
+            match Command::new(server_path).spawn() {
                 Ok(mut handle) => {
                     server_rx.recv().unwrap();
                     handle.kill().unwrap();

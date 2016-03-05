@@ -11,7 +11,7 @@ pub fn compile() {
             .arg("--cache-location").arg("tmp/cache")
             .arg("--load-path").arg("app/assets/stylesheets")
             .args(&["--style","compressed"])
-            .status().unwrap();
+            .status().expect("Unable to run the scss command.");
         println!("- compiled {}", dest);
     }
 }

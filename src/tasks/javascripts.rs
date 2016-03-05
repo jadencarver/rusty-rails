@@ -6,7 +6,7 @@ use std::fs::File;
 extern crate serde_json;
 
 pub fn compile() {
-    Command::new("bower").arg("install").status().unwrap();
+    Command::new("bower").arg("install").status().expect("Unable to run bower");
 
     let mut bower_sources: BTreeMap<String, BTreeMap<&str, String>> = BTreeMap::new();
     for path in glob("vendor/assets/*/dist/*.js").unwrap().filter_map(Result::ok) {
