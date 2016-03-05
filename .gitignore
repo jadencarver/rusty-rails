@@ -1,4 +1,5 @@
 /target
+/public/assets/*
 /vendor/assets/*
 /node_modules
 /tmp/*
