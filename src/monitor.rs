@@ -11,6 +11,8 @@ use std::thread;
 use std::time::Duration;
 mod tasks;
 
+const ESC: char = 27 as char;
+
 fn main() {
     let (watcher_tx, watcher_rx) = channel();
     let (server_tx, server_rx) = channel();
@@ -46,7 +48,7 @@ fn main() {
                     Err(_) => break 'flush
                 }
             }
-            println!("{}[2J", 27 as char);
+            print!("{}[H{}[2J", ESC, ESC);
             Command::new("cargo").arg("build").arg("--bin").arg("server").status().unwrap();
             server_tx.send(()).unwrap();
         }
