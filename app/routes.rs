@@ -9,7 +9,7 @@ pub fn routes() -> Router {
         get "/" => pages::index,
         get "/resume" => pages::resume,
         get "/portfolio" => pages::portfolio,
-        // get "/entries" => entries::index,
+        get "/entries" => entries::index,
         // get "/entries/new" => entries::new,
         // get "/entries/:id" => entries::show,
         // get "/entries/:id/edit" => entries::edit,
