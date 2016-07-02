@@ -41,7 +41,7 @@ fn main() {
     let builder = thread::spawn(move || {
         loop {
             builder_rx.recv().unwrap();
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(100));
             'flush: loop {
                 match builder_rx.try_recv() {
                     Ok(_) => {}
@@ -49,14 +49,23 @@ fn main() {
                 }
             }
             print!("{}[H{}[2J", ESC, ESC);
-            Command::new("cargo").arg("build").arg("--bin").arg("server").status().unwrap();
-            server_tx.send(()).unwrap();
+            let build = Command::new("cargo").arg("build").arg("--bin").arg("server").status();
+            if build.unwrap().success() {
+                server_tx.send(()).unwrap();
+            }
         }
     });
 
     let js_assets = thread::spawn(move || {
         loop {
             js_assets_rx.recv().unwrap();
+            thread::sleep(Duration::from_millis(100));
+            'flush: loop {
+                match js_assets_rx.try_recv() {
+                    Ok(_) => {}
+                    Err(_) => break 'flush
+                }
+            }
             tasks::javascripts::compile();
         }
     });
