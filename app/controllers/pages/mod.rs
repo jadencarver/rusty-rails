@@ -9,6 +9,6 @@ pub fn index(_: &mut Request) -> IronResult<Response> {
   Ok(Response::with((
     status::Ok,
     "text/html".parse::<Mime>().unwrap(),
-    layouts::application(views::index::index())
+    layouts::pages(views::index::index())
   )))
 }
