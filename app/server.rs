@@ -30,7 +30,7 @@ extern crate maud;
 /// If you'd rather use plain SQL, it can easily be swapped out for the r2d2-postgres and postgres
 /// cargo packages.
 ///
-#[macro_use] extern crate diesel;
+#[macro_use] pub extern crate diesel;
 extern crate ansi_term;
 extern crate dotenv;
 extern crate persistent;
@@ -38,11 +38,11 @@ extern crate r2d2;
 extern crate r2d2_diesel;
 
 /// You can change also change the type of database used by the connection pool.
-// pub type DBType = diesel::pg::PgConnection;
-// pub type DBPool = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>;
-// pub type DBPoolRef = std::sync::Arc<DBPool>;
-// pub struct DB;
-// impl iron::typemap::Key for DB { type Value = DBPool; }
+pub type DBType = diesel::pg::PgConnection;
+pub type DBPool = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>;
+pub type DBPoolRef = std::sync::Arc<DBPool>;
+pub struct DB;
+impl iron::typemap::Key for DB { type Value = DBPool; }
 
 use iron::prelude::*;
 use iron::modifiers::*;
@@ -58,8 +58,8 @@ use std::env;
 /// familiar to you.  One big difference is that I prefer my views folders to sit right next to
 /// their controllers.  It may be helpful for readers to familiarize themselves with the Rust
 /// pattern for modularizing code.  Basically, you can create files with their module name,
-/// (like `controllers/entries.rs` maps to `controllers::entries`) or you can break it down even further by creating a
-/// folder containing at least this one file `controllers/entries/mod.rs`.
+/// (like `controllers/entries.rs` maps to `controllers::entries`) or you can break it down even
+/// further by creating a folder containing at least one file: `controllers/entries/mod.rs`.
 ///
 /// Iron's router is really easy to use, and you can manage them inside `app/routes.rs`.  The final
 /// route serves static assets.  If you don't want to (like in a production environment, behind
@@ -102,6 +102,9 @@ pub mod schema;
 pub mod models;
 mod errors;
 
+/// ### Error Handling
+/// This middleware captures errors and displays an error page.  Customize it in `app/errors.rs`.
+
 struct ErrorHandler;
 impl AfterMiddleware for ErrorHandler {
     fn catch(&self, _: &mut Request, error: IronError) -> IronResult<Response> {
@@ -112,6 +115,9 @@ impl AfterMiddleware for ErrorHandler {
     }
 }
 
+
+// Here we go!!
+// ------------------
 fn main() {
     
     // Provide secrets and environment variables using `.env`
@@ -135,6 +141,7 @@ fn main() {
     chain.link_before(logger_before).link_after(logger_after);
     chain.link_after(ErrorHandler);
 
+    // Fire-up them engines!
     match Iron::new(chain).http(&hostname[..]) {
         Ok(_) => println!("Started on {}", Green.bold().paint(hostname)),
         Err(error) => println!("Unable to start: {}", error)

@@ -7,7 +7,9 @@ use std::time::Duration;
 pub fn routes() -> Router {
     router!(
         get "/" => pages::index,
-        // get "/entries" => entries::index,
+        get "/resume" => pages::resume,
+        get "/portfolio" => pages::portfolio,
+        get "/entries" => entries::index,
         // get "/entries/new" => entries::new,
         // get "/entries/:id" => entries::show,
         // get "/entries/:id/edit" => entries::edit,

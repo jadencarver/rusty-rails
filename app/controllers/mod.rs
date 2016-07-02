@@ -6,10 +6,13 @@ use persistent;
 use params;
 use router;
 
-// pub fn params(request: &mut Request) -> (router::Params, params::Map, ::DBPoolRef) {
-//     (
-//         request.extensions.get::<router::Router>().unwrap().clone(),
-//         request.get::<params::Params>().unwrap().clone(),
-//         request.extensions.get::<persistent::Read<::DB>>().unwrap().clone()
-//     )
-// }
+pub mod entries;
+pub mod pages;
+
+pub fn params(request: &mut Request) -> (router::Params, params::Map, ::DBPoolRef) {
+    (
+        request.extensions.get::<router::Router>().unwrap().clone(),
+        request.get::<params::Params>().unwrap().clone(),
+        request.extensions.get::<persistent::Read<::DB>>().unwrap().clone()
+    )
+}
