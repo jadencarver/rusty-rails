@@ -1,4 +1,4 @@
-use controllers::*;
+use controllers::prelude::*;
 mod views;
 
 pub fn index(_: &mut Request) -> IronResult<Response> {

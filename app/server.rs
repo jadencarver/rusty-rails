@@ -37,13 +37,6 @@ extern crate persistent;
 extern crate r2d2;
 extern crate r2d2_diesel;
 
-/// You can change also change the type of database used by the connection pool.
-pub type DBType = diesel::pg::PgConnection;
-pub type DBPool = r2d2::Pool<r2d2_diesel::ConnectionManager<DBType>>;
-pub type DBPoolRef = std::sync::Arc<DBPool>;
-pub struct DB;
-impl iron::typemap::Key for DB { type Value = DBPool; }
-
 use iron::prelude::*;
 use iron::modifiers::*;
 use ansi_term::Colour::*;
@@ -52,6 +45,17 @@ use iron::AfterMiddleware;
 use iron::status;
 use logger::Logger;
 use std::env;
+
+/// You can change also change the type of database used by the connection pool.
+pub type DBType = diesel::pg::PgConnection;
+pub type DBManager = r2d2_diesel::ConnectionManager<DBType>;
+pub type DBPool = r2d2::Pool<DBManager>;
+pub type DBPoolArc = std::sync::Arc<DBPool>;
+
+pub struct DB;
+impl iron::typemap::Key for DB {
+    type Value = DBPool;
+}
 
 /// ### Routing and MVC
 /// The design of Rusty Rails is inspired by (obviously) Ruby on Rails, so it should be instantly
@@ -132,10 +136,10 @@ fn main() {
     let mut chain = Chain::new(routes::routes());
 
     // Iron and r2d2 provide persistent database connection pooling for all requests.
-    // let manager = r2d2_diesel::ConnectionManager::<DBType>::new(database_url);
-    // let pool = r2d2::Pool::new(r2d2::Config::default(), manager)
-    //     .expect("Database connection failed.");
-    // chain.link(persistent::Read::<DB>::both(pool));
+    let manager = r2d2_diesel::ConnectionManager::<DBType>::new(database_url);
+    let pool = r2d2::Pool::new(r2d2::Config::default(), manager)
+        .expect("Database connection failed.");
+    chain.link(persistent::Read::<DB>::both(pool));
 
     let (logger_before, logger_after) = Logger::new(None);
     chain.link_before(logger_before).link_after(logger_after);

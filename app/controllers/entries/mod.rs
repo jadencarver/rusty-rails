@@ -1,10 +1,10 @@
-use controllers::*;
-use models::entry::Entry;
+use controllers::prelude::*;
 use schema::entries::dsl::entries;
+use models::entry::Entry;
 mod views;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
 
     let entries_per_page: i64 = 5;
     let page = match params.find(&["p"]).unwrap_or(&params::Value::Null).clone() {
@@ -24,7 +24,7 @@ pub fn index(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn show(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
     let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
     let ref connection = *pool.get().unwrap();
     let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
@@ -43,7 +43,7 @@ pub fn new(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
     let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
     let ref connection = *pool.get().unwrap();
     let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
@@ -54,7 +54,7 @@ pub fn edit(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn create(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
     let ref connection = *pool.get().unwrap();
     let mut entry = Entry::new();
     entry.update(params);
@@ -77,7 +77,7 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn update(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
     let ref connection = *pool.get().unwrap();
     let id = route.find("id").unwrap().parse::<i32>().unwrap();
     let mut entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
@@ -101,7 +101,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
 }
 
 pub fn delete(request: &mut Request) -> IronResult<Response> {
-    let (route, params, pool) = params(request);
+    let (route, params, pool) = read_request(request);
     //let mut entry = get_entry(request);
     //entry.delete();
     Ok(Response::with((
