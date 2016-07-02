@@ -1,4 +1,4 @@
-use controllers::*;
+use controllers::prelude::*;
 use models::{resource}::{Resource};
 use schema::{resources}::dsl::{resources};
 mod views;
