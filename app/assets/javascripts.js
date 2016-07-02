@@ -1,2 +1,4 @@
 jQuery = require('jquery');
-React = require('react');
+Application = require('./javascripts/application.js');
+
+window.application = new Application(jQuery);

@@ -1,20 +1,7 @@
-use iron::prelude::*;
-use iron::modifiers::*;
-use iron::headers;
-use iron::status;
-
-use controllers::params;
-use layouts;
-use formats;
-mod views;
-use params;
-
-use diesel;
-use diesel::prelude::*;
+use controllers::*;
 use models::entry::Entry;
 use schema::entries::dsl::entries;
-
-//----
+mod views;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = params(request);
@@ -32,7 +19,7 @@ pub fn index(request: &mut Request) -> IronResult<Response> {
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::application(views::index::index(index, page, num_pages))
+                       layouts::entries(views::index::index(index, page, num_pages))
                       )))
 }
 
@@ -43,7 +30,7 @@ pub fn show(request: &mut Request) -> IronResult<Response> {
     let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::application(views::show::show(entry))
+                       layouts::entries(views::show::show(entry))
                       )))
 }
 
@@ -51,7 +38,7 @@ pub fn new(_: &mut Request) -> IronResult<Response> {
     let entry = Entry::new();
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::application(views::form::new(entry, None))
+                       layouts::entries(views::form::new(entry, None))
                       )))
 }
 
@@ -62,7 +49,7 @@ pub fn edit(request: &mut Request) -> IronResult<Response> {
     let entry = entries.find(id).first::<Entry>(connection).expect("Error loading entry");
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::application(views::form::edit(entry, None))
+                       layouts::entries(views::form::edit(entry, None))
                       )))
 }
 
@@ -83,7 +70,7 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
         Err(errors) => {
             Ok(Response::with((status::NotAcceptable,
                                Header(formats::html()),
-                               layouts::application(views::form::new(entry, errors))
+                               layouts::entries(views::form::new(entry, errors))
                               )))
         }
     }
@@ -107,7 +94,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
         Err(errors)  => {
             Ok(Response::with((status::NotAcceptable,
                                Header(formats::html()),
-                               layouts::application(views::form::edit(entry, errors))
+                               layouts::entries(views::form::edit(entry, errors))
                               )))
         }
     }

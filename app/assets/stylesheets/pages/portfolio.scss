@@ -1,0 +1,17 @@
+@import '../colors';
+
+#portfolio {
+  height: 100%;
+  background-color: $color4;
+  &, a[href] {
+    color: $color1;
+  }
+  header {
+    background-color: $color5;
+  }
+  section {
+    margin: 3rem auto;
+    border: dotted $color5 2pt;
+    padding: 0 2rem 1rem;
+  }
+}

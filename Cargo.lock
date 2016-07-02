@@ -19,6 +19,7 @@ dependencies = [
  "persistent 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2-diesel 0.6.0 (git+https://github.com/sgrif/r2d2-diesel.git)",
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",

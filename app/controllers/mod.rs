@@ -1,10 +1,18 @@
-//pub mod entries;
-pub mod pages;
+pub use iron::prelude::*;
+pub use iron::modifiers::*;
+pub use iron::status;
+pub use layouts;
+pub use formats;
 
-use iron::prelude::*;
+pub use diesel;
+pub use diesel::prelude::*;
+
 use persistent;
 use params;
 use router;
+
+//pub mod entries;
+pub mod pages;
 
 // pub fn params(request: &mut Request) -> (router::Params, params::Map, ::DBPoolRef) {
 //     (

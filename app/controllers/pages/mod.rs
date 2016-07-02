@@ -1,14 +1,26 @@
-use iron::{Request, Response, IronResult};
-use iron::mime::Mime;
-use iron::status;
-use layouts;
-
+use controllers::*;
 mod views;
 
 pub fn index(_: &mut Request) -> IronResult<Response> {
-  Ok(Response::with((
-    status::Ok,
-    "text/html".parse::<Mime>().unwrap(),
-    layouts::application(views::index::index())
-  )))
+    Ok(Response::with((
+                status::Ok,
+                Header(formats::html()),
+                layouts::pages(views::index::index())
+                )))
+}
+
+pub fn resume(_: &mut Request) -> IronResult<Response> {
+    Ok(Response::with((
+                status::Ok,
+                Header(formats::html()),
+                layouts::pages(views::resume::resume())
+                )))
+}
+
+pub fn portfolio(_: &mut Request) -> IronResult<Response> {
+    Ok(Response::with((
+                status::Ok,
+                Header(formats::html()),
+                layouts::pages(views::portfolio::portfolio())
+                )))
 }

@@ -1,0 +1,152 @@
+@import 'fonts';
+@import 'colors';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-sans-serif;
+  background-color: $color2;
+  font-size: 12pt;
+  line-height: 2em;
+  color: $color3;
+  overflow-y: scroll;
+}
+
+a[href] {
+  color: $color4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  em, span {
+    color: $color3;
+    font-family: $font-sans-serif;
+    font-size: 0.85rem;
+    margin-left: 1rem;
+  }
+}
+
+h1, h2, h3 {
+  font-family: $font-monospace;
+  line-height: 4rem;
+  padding-top: 1rem;
+}
+
+h1 { font-size: 4rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 2rem; text-transform: uppercase; }
+
+p {
+  margin-bottom: 1rem;
+}
+
+code, pre {
+  background-color: #EEEEEE;
+  border-radius: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  border: solid #DDDDDD 1px;
+  box-shadow: 1pt 1pt 1pt #CCCCCC;
+}
+
+ul, ol {
+  > li { margin-left: 1.25em; }
+  margin-bottom: 1rem;
+}
+
+article, form, .container, body > section {
+  > * {
+    list-style-type: none;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+  }
+  header {
+    background-color: $color3;
+    color: $color1;
+    margin: 0;
+    max-width: 100%;
+    padding-bottom: 1rem;
+    text-align: center;
+    a[href] {
+      text-decoration: none;
+      color: $color1;
+    }
+    @media screen and (max-width: 699px) {
+      h1 {
+        text-align: left;
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+label {
+  display: inline-block;
+  min-width: 100pt;
+}
+
+input, textarea {
+  border: solid $color5 2pt;
+  background-color: $color2;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+  vertical-align: top;
+  &:focus {
+    background-color: #FFFFFF;
+    border-color: $color4;
+    outline: none;
+  }
+}
+
+input[type=text], textarea {
+  min-width: 200pt;
+  width: 100%;
+  width: calc(100% - 100pt);
+}
+
+textarea {
+  height: 200pt;
+}
+
+input[type=submit] {
+  cursor: pointer;
+  background-color: lighten($color5, 10%);
+  color: #FFFFFF;
+  &:active {
+    border-color: darken($color4, 10%);
+    background-color: $color4;
+  }
+}
+
+.collapsed { display: none !important; }
+.expanded .collapsed { display: inherit; }
+
+header figure {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background-color: $color4;
+  width: 100pt;
+  height: 100pt;
+  overflow: hidden;
+  font-family: $font-monospace;
+  font-size: 75pt;
+  line-height: 105pt;
+  * {
+    color: $color1 !important;
+    text-decoration: none;
+  }
+  figcaption {
+    transition: all 0.5s;
+  }
+  &:hover {
+    figcaption {
+      margin-top: -115pt;
+    }
+  }
+}

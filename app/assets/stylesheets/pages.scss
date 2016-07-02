@@ -1,0 +1,23 @@
+@import "colors";
+@import "fonts";
+
+body.pages {
+  @import 'pages/portfolio';
+  @import 'pages/resume';
+
+  #tessellation {
+    rect { stroke: darken($color2, 2%); stroke-width: 1pt; fill: $color1; transition: fill 0.15s, transform 3s, transform-origin 3s; }
+    rect.tessellation-sq { }
+    rect.tessellation-rt { transform: skew(0deg,45deg) translate(0,75pt); }
+    rect.tessellation-bt { transform: skew(45deg,0deg) translate(75pt,0); }
+    rect.on { fill: $color2; }
+    rect.on:hover { fill: darken($color5, 5%); }
+    rect:hover, rect.active { fill: $color5; }
+    rect.highlight { fill: $color5; }
+    rect.destructing.tessellation-sq { transform-origin: center; transform: scale(0); }
+    rect.destructing.tessellation-rt { transform-origin: center; transform: scale(0) skew(0deg,45deg) translate(0,75pt); }
+    rect.destructing.tessellation-bt { transform-origin: center; transform: scale(0) skew(45deg,0deg) translate(75pt,0); }
+    text.name { pointer-events: none; font-family: $font-monospace; opacity: 0; transition: opacity 2s, transform 1s 3s; }
+    text.name.destructing { opacity: 1; transform: scale(12); -webkit-transform: scale(12); }
+  }
+}

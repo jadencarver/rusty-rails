@@ -107,7 +107,7 @@ impl AfterMiddleware for ErrorHandler {
     fn catch(&self, _: &mut Request, error: IronError) -> IronResult<Response> {
         Ok(Response::with((status::Ok,
                            Header(formats::html()),
-                           layouts::application(errors::default(error))
+                           layouts::application("errors", errors::default(error))
                           )))
     }
 }
