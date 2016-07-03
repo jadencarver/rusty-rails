@@ -4,8 +4,8 @@ use schema::{resources}::dsl::{resources};
 mod views;
 
 pub fn index(request: &mut Request) -> IronResult<Response> {{
-    let (route, params, pool) = params(request);
-    let ref db = try!(*pool.get());
+    let (route, params, pool) = read_request(request);
+    let ref db = *pool.get().unwrap();
     let results = try!({resources}.get_results::<{Resource}>(db));
 
     Ok(Response::with((status::Ok,
@@ -15,14 +15,14 @@ pub fn index(request: &mut Request) -> IronResult<Response> {{
 }}
 
 pub fn show(request: &mut Request) -> IronResult<Response> {{
-    let (route, params, pool) = params(request);
-    let id = try!(try!(route.find("id")).parse::<i32>());
-    let ref db = try!(*pool.get());
+    let (route, params, pool) = read_request(request);
+    let id = try!(route.find("id").unwrap_or("").parse::<i32>());
+    let ref db = *pool.get().unwrap();
     let {resource} = try!({resource}.find(id).first::<{Resource}>(db));
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::{resource}(views::show::show())
+                       layouts::{resource}(views::show::show({resource}))
                       )))
 }}
 
@@ -30,24 +30,24 @@ pub fn new(request: &mut Request) -> IronResult<Response> {{
     let {resource} = {Resource}::new();
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::{resource}(views::form::new({resource}))
+                       layouts::{resource}(views::form::new({resource}, None))
                       )))
 }}
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {{
-    let (route, params, pool) = params(request);
-    let id = try!(try!(route.find("id")).parse::<i32>());
-    let ref db = try!(*pool.get());
+    let (route, params, pool) = read_request(request);
+    let id = try!(route.find("id").unwrap_or("").parse::<i32>());
+    let ref db = *pool.get().unwrap();
     let {resource} = try!({resource}.find(id).first::<{Resource}>(db));
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
-                       layouts::{resource}(views::form::edit())
+                       layouts::{resource}(views::form::edit({resource}, None))
                       )))
 }}
 
 pub fn create(request: &mut Request) -> IronResult<Response> {{
-    let (route, params, pool) = params(request);
-    let ref db = try!(*pool.get());
+    let (route, params, pool) = read_request(request);
+    let ref db = *pool.get().unwrap();
     let mut new_{resource} = {Resource}::new();
     new_{resource}.update(params);
 
@@ -69,9 +69,9 @@ pub fn create(request: &mut Request) -> IronResult<Response> {{
 }}
 
 pub fn update(request: &mut Request) -> IronResult<Response> {{
-    let (route, params, pool) = params(request);
-    let ref db = try!(*pool.get());
-    let id = try!(try!(route.find("id")).parse::<i32>());
+    let (route, params, pool) = read_request(request);
+    let ref db = *pool.get().unwrap();
+    let id = try!(route.find("id").unwrap_or("").parse::<i32>());
     let mut {resource} = try!({resources}.find(id).first::<{Resource}>(db));
     {resource}.update(params);
 

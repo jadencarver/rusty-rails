@@ -1,5 +1,5 @@
 use maud::PreEscaped;
-use models::entry::{NewEntry, Entry, Errors};
+use models::entry::*;
 
 pub fn new(entry: NewEntry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
@@ -7,7 +7,7 @@ pub fn new(entry: NewEntry, errors: Errors) -> PreEscaped<String> {
 
         form action="/entries" method="POST" {
             h2 "Creating Entry"
-                ^(form(entry.to_generic(), errors))
+                ^(form::<NewEntry>(entry, errors))
                 div class="actions" {
                     input type="submit" value="Create Entry" /
                 }
@@ -33,9 +33,7 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
     PreEscaped(html)
 }
 
-// -- private --
-//
-fn form(entry: Entry, errors: Errors) -> PreEscaped<String> {
+fn form<T: EntryModel>(entry: T, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
     html!(html, {
         @if errors.is_some() {
@@ -50,12 +48,12 @@ fn form(entry: Entry, errors: Errors) -> PreEscaped<String> {
 
         div class="field" {
             label for="entry_title" "Title"
-                input id="entry_title" type="text" name="entry[title]" value=^(entry.title) /
+                input id="entry_title" type="text" name="entry[title]" value=^(entry.title()) /
         }
 
         div class="field" {
             label for="entry_body" "Body"
-                textarea id="entry_body" type="text" name="entry[body]" ^(entry.body)
+                textarea id="entry_body" type="text" name="entry[body]" ^(entry.body())
         }
 
     }).unwrap();

@@ -4,6 +4,41 @@ use std::collections::HashMap;
 pub type Errors = Option<HashMap<&'static str, Vec<&'static str>>>;
 use params::{Map, Value};
 
+pub trait EntryModel {
+    fn title(&self) -> &String;
+    fn body(&self) -> &String;
+    fn set_title(&mut self, title: String);
+    fn set_body(&mut self, title: String);
+    fn update(&mut self, params: Map);
+    fn is_valid(&mut self) -> Result<bool, Errors>;
+}
+
+fn validate<Entry: EntryModel>(entry: &Entry) -> Result<bool, Errors> {
+    let mut errors = HashMap::new();
+
+    if entry.title().is_empty() { errors.insert("title", vec!["can't be blank"]); }
+    if entry.body().is_empty()  { errors.insert("body", vec!["can't be blank"]); }
+
+    if errors.is_empty() {
+        Ok(true)
+    } else {
+        Err(Some(errors))
+    }
+}
+
+fn update<Entry: EntryModel>(entry: &mut Entry, params: Map) {
+    match params.find(&["entry","title"]).unwrap().clone() {
+        Value::String(title) => entry.set_title(title),
+        _ => {}
+    }
+    match params.find(&["entry","body"]).unwrap().clone() {
+        Value::String(body) => entry.set_body(body),
+        _ => {}
+    }
+}
+
+//
+
 #[derive(Queryable)]
 #[insertable_into(entries)]
 #[changeset_for(entries)]
@@ -14,49 +49,6 @@ pub struct Entry {
   pub public: bool
 }
 
-#[insertable_into(entries)]
-pub struct NewEntry {
-  pub title: String,
-  pub body: String,
-  pub public: bool
-}
-
-impl NewEntry {
-    pub fn to_generic(self) -> Entry {
-        Entry {
-            id: 0,
-            title: self.title,
-            body: self.body,
-            public: self.public
-        }
-    }
-
-    pub fn update(&mut self, params: Map) {
-        // params[:entry][:title]
-        match params.find(&["entry","title"]).unwrap().clone() {
-            Value::String(title) => self.title = title,
-            _ => {}
-        }
-        match params.find(&["entry","body"]).unwrap().clone() {
-            Value::String(body) => self.body = body,
-            _ => {}
-        }
-    }
-
-    pub fn is_valid(&mut self) -> Result<bool, Errors> {
-        let mut errors = HashMap::new();
-
-        if self.title.is_empty() { errors.insert("title", vec!["can't be blank"]); }
-        if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
-
-        if errors.is_empty() {
-            Ok(true)
-        } else {
-            Err(Some(errors))
-        }
-    }
-}
-
 impl Entry {
     pub fn new() -> NewEntry {
         NewEntry {
@@ -65,29 +57,30 @@ impl Entry {
             public: false
         }
     }
-
-    pub fn update(&mut self, params: Map) {
-        match params.find(&["entry","title"]).unwrap().clone() {
-            Value::String(title) => self.title = title,
-            _ => {}
-        }
-        match params.find(&["entry","body"]).unwrap().clone() {
-            Value::String(body) => self.body = body,
-            _ => {}
-        }
-    }
-
-    pub fn is_valid(&mut self) -> Result<bool, Errors> {
-        let mut errors = HashMap::new();
-
-        if self.title.is_empty() { errors.insert("title", vec!["can't be blank"]); }
-        if self.body.is_empty()  { errors.insert("body", vec!["can't be blank"]); }
-
-        if errors.is_empty() {
-            Ok(true)
-        } else {
-            Err(Some(errors))
-        }
-    }
-
 }
+
+impl EntryModel for Entry {
+    fn title(&self) -> &String { &self.title }
+    fn body (&self) -> &String { &self.body  }
+    fn update(&mut self, params: Map) { update(self, params) }
+    fn is_valid(&mut self) -> Result<bool, Errors> { validate(self) }
+    fn set_title(&mut self, title: String) { self.title = title }
+    fn set_body(&mut self, body: String) { self.body = body }
+}
+
+#[insertable_into(entries)]
+pub struct NewEntry {
+  pub title: String,
+  pub body: String,
+  pub public: bool
+}
+
+impl EntryModel for NewEntry {
+    fn title(&self) -> &String { &self.title }
+    fn body (&self) -> &String { &self.body  }
+    fn update(&mut self, params: Map) { update(self, params) }
+    fn is_valid(&mut self) -> Result<bool, Errors> { validate(self) }
+    fn set_title(&mut self, title: String) { self.title = title }
+    fn set_body(&mut self, body: String) { self.body = body }
+}
+

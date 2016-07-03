@@ -1,5 +1,5 @@
 use maud::PreEscaped;
-use models::entry::Entry;
+use models::entry::*;
 use helpers::view::*;
 
 pub fn index(entries: Vec<Entry>, page: i64, num_pages: i64) -> PreEscaped<String> {

@@ -1,7 +1,6 @@
 extern crate rand;
 
 use maud::PreEscaped;
-use std::num;
 use self::rand::Rng;
 
 pub fn index() -> PreEscaped<String> {

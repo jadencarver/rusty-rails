@@ -1,4 +1,4 @@
-use models::entry::Entry;
+use models::entry::*;
 use helpers::view::simple_format;
 use maud::PreEscaped;
 

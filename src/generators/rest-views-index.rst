@@ -5,7 +5,7 @@ pub fn index({resources}: Vec<{Resource}>) -> PreEscaped<String> {{
 
     html!(body, {{
         ul id="{resource}_index" {{
-            @for {resource} in {resources} {{
+            @for {resource} in {resources}.iter() {{
                 li ^({resource})
             }}
         }}

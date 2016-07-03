@@ -7,9 +7,7 @@ pub fn show({resource}: {Resource}) -> PreEscaped<String> {{
     html!(body, {{
         article.{resource} id=^(format!("{resource}_{{}}", {resource}.id)) {{
 
-            @for {resource} in {resources} {{
 {fields}
-            }}
 
             ul.{resource}__actions.actions {{
                 li a href=^(format!("/{resource}/{{}}/edit", {resource}.id)) "Edit {Resource}"
