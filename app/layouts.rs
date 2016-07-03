@@ -25,6 +25,6 @@ pub fn pages(body: PreEscaped<String>) -> String {
     application("pages", body)
 }
 
-pub fn picture(body: PreEscaped<String>) -> String {
-    application("picture", body)
+pub fn pictures(body: PreEscaped<String>) -> String {
+    application("pictures", body);
 }

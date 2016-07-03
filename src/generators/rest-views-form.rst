@@ -1,13 +1,13 @@
 use maud::PreEscaped;
-use models::{resource}::{{New{Resource}, {Resource}, Errors}};
+use models::{resource}::*;
 
 pub fn new({resource}: New{Resource}, errors: Errors) -> PreEscaped<String> {{
     let mut html = String::new();
 
     html!(html, {{
-        form id=^(format!("{resources}_{{}}", {resource}.id)) action="/{resources}" method="POST" {{
+        form id="new_{resource}" action="/{resources}" method="POST" {{
             h2 "Creating {Resource}"
-            ^(form({resource}.to_generic(), errors))
+            ^(form({resource}, errors))
             div class="actions" {{
                 input type="submit" value="Create {Resource}" /
             }}
@@ -21,7 +21,7 @@ pub fn edit({resource}: {Resource}, errors: Errors) -> PreEscaped<String> {{
     let mut html = String::new();
 
     html!(html, {{
-        form action=^(format!("/{resources}/{{}}", {resource}.id)) method="POST" {{
+        form action=^(format!("/{resources}/{{}}", {resource}.id)) method="PATCH" {{
             h2 "Editing {Resource}"
             ^(form({resource}, errors))
             div class="actions" {{
@@ -33,7 +33,7 @@ pub fn edit({resource}: {Resource}, errors: Errors) -> PreEscaped<String> {{
     PreEscaped(html)
 }}
 
-fn form({resource}: {Resource}, errors: Errors) -> PreEscaped<String> {{
+fn form<T: {Resource}Model>({resource}: T, errors: Errors) -> PreEscaped<String> {{
     let mut html = String::new();
     html!(html, {{
         @if errors.is_some() {{

@@ -1,4 +1,6 @@
 use maud::PreEscaped;
+use models::{resource}::*;
+use helpers::view::*;
 
 pub fn index({resources}: Vec<{Resource}>) -> PreEscaped<String> {{
     let mut body = String::new();
