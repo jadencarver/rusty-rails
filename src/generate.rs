@@ -1,5 +1,8 @@
 extern crate clap;
+extern crate chrono;
+extern crate ansi_term;
 use clap::{Arg, App, SubCommand};
+
 mod generators;
 
 fn main() {

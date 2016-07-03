@@ -24,7 +24,3 @@ pub fn entries(body: PreEscaped<String>) -> String {
 pub fn pages(body: PreEscaped<String>) -> String {
     application("pages", body)
 }
-
-pub fn pictures(body: PreEscaped<String>) -> String {
-    application("pictures", body);
-}

@@ -1,4 +1,6 @@
 use std::io::prelude::*;
+use ansi_term::Colour::*;
+use chrono;
 use std::fs::*;
 use clap::Values;
 
@@ -35,6 +37,7 @@ pub fn scaffold(resource: &str, attributes: Option<Values>) {
     let resource = resource;
     let resources = format!("{}s", resource);
     let Resource = format!("{}{}", &resource.to_uppercase()[0..1], &resource[1..]);
+    let timestamp = chrono::Local::now().format("%Y%m%d%H%M%S");
 
     create_dir("app").unwrap_or(());
     create_dir("app/controllers").unwrap_or(());
@@ -55,16 +58,17 @@ pub fn scaffold(resource: &str, attributes: Option<Values>) {
         Resource = Resource
     ).unwrap();
 
-    //let mut controllers_mod = OpenOptions::new().append(true).open("app/controllers/mod.rs")
-    //    .expect("failed to append controllers/mod.rs");
-    //write!(controllers_mod, "pub mod {};\n", resources)
-    //    .expect("failed to append controllers/mod.rs");
+    // TODO: Don't append controller if it already exists
+    let mut controllers_mod = OpenOptions::new().append(true).open("app/controllers/mod.rs")
+        .expect("failed to append controllers/mod.rs");
+    write!(controllers_mod, "pub mod {};\n", resources)
+        .expect("failed to append controllers/mod.rs");
 
     // TODO: Detect app/layouts/mod.rs and update the module as appropriate
-    //let mut layouts_mod = OpenOptions::new().append(true).open("app/layouts.rs")
-    //    .expect("failed to append app/layouts.rs");
-    //write!(layouts_mod, "\npub fn {}(body: PreEscaped<String>) -> String {{\n    application(\"{}\", body);\n}}\n", resources, resources)
-    //    .expect("failed to append app/layouts.rs");
+    let mut layouts_mod = OpenOptions::new().append(true).open("app/layouts.rs")
+        .expect("failed to append app/layouts.rs");
+    write!(layouts_mod, "\npub fn {}(body: PreEscaped<String>) -> String {{\n    application(\"{}\", body)\n}}\n", resources, resources)
+        .expect("failed to append app/layouts.rs");
 
     let mut views = File::create(format!("app/controllers/{}/views/mod.rs", resources))
         .expect("failed to create the view module");
@@ -159,10 +163,35 @@ pub fn scaffold(resource: &str, attributes: Option<Values>) {
         fields_validations = model_fields_validations
     ).expect("failed to write the model");
 
-    //let mut models_mod = OpenOptions::new().append(true).open("app/models/mod.rs")
-    //    .expect("failed to append app/models/mod.rs");
-    //write!(models_mod, "pub mod {};\n", resource)
-    //    .expect("failed to append models/mod.rs");
+    // TODO: Don't append model if it already exists
+    let mut models_mod = OpenOptions::new().append(true).open("app/models/mod.rs")
+        .expect("failed to append app/models/mod.rs");
+    write!(models_mod, "pub mod {};\n", resource)
+        .expect("failed to append models/mod.rs");
+
+    let sql_fields: String = fields.iter().fold(String::new(), |mut s, field| {
+        s.push_str(&format!("\n    {field} {field_type}{nullable}",
+                            field = field.field_name, field_type = field.field_type,
+                            nullable = if field.field_pub { "" } else { " NOT NULL" }
+                            ));
+        s
+    });
+
+    let migration_dir = format!("migrations/{}_{}_{}", timestamp, "scaffold", resources);
+    create_dir(&migration_dir).unwrap();
+
+    let mut migration_up = File::create(format!("{}/up.sql", migration_dir))
+        .expect("failed to create the migration up");
+    write!(migration_up, "CREATE TABLE {resources} (\n    id SERIAL PRIMARY KEY,{fields}\n)",
+        resources = resources,
+        fields = sql_fields
+    ).expect("failed to write the migration up");
+
+    let mut migration_down = File::create(format!("{}/down.sql", migration_dir))
+        .expect("failed to create the migration up");
+    write!(migration_down, "DROP TABLE {resources};", resources = resources,
+    ).expect("failed to write the migration down");
+    println!("migrations created apply them using:  {}\n", Green.bold().paint("diesel migration run"))
 
     // TODO: Implement scaffold - route generation (requires code parsing)
 }

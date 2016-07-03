@@ -10,7 +10,7 @@ pub fn show({resource}: {Resource}) -> PreEscaped<String> {{
 {fields}
 
             ul.{resource}__actions.actions {{
-                li a href=^(format!("/{resource}/{{}}/edit", {resource}.id)) "Edit {Resource}"
+                li a href=^(format!("/{resources}/{{}}/edit", {resource}.id)) "Edit {Resource}"
                 li a href="/{resources}" "View All"
             }}
         }}

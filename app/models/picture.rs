@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 use schema::pictures;
-use maud::RenderOnce;
+use std::fmt;
 
 use std::collections::HashMap;
 pub type Errors = Option<HashMap<&'static str, Vec<&'static str>>>;
@@ -52,6 +52,12 @@ impl PictureModel for Picture {
     fn is_valid(&mut self) -> Result<bool, Errors> { validate(self) }
     fn title(&self) -> &String { &self.title }
     fn set_title(&mut self, title: String) { self.title = title }
+}
+
+impl fmt::Display for Picture {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        fmt.write_str(&format!("Picture #{}", self.id))
+    }
 }
 
 #[insertable_into(pictures)]

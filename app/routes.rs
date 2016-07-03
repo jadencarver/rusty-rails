@@ -9,6 +9,7 @@ pub fn routes() -> Router {
         get "/" => pages::index,
         get "/resume" => pages::resume,
         get "/portfolio" => pages::portfolio,
+
         get "/entries" => entries::index,
         get "/entries/new" => entries::new,
         get "/entries/:id" => entries::show,
@@ -17,6 +18,7 @@ pub fn routes() -> Router {
         patch "/entries/:id" => entries::update,
          post "/entries/:id" => entries::update,
         delete "/entries/:id" => entries::delete,
+
         get "/*" => Static::new(Path::new("public")).cache(Duration::from_secs(30*24*60*60))
     )
 }
