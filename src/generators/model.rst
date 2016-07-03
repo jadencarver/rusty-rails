@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 use schema::{resources};
-use maud::RenderOnce;
+use std::fmt;
 
 use std::collections::HashMap;
 pub type Errors = Option<HashMap<&'static str, Vec<&'static str>>>;
@@ -42,6 +42,12 @@ impl {Resource} {{
 impl {Resource}Model for {Resource} {{
     fn update(&mut self, params: Map) {{ update(self, params) }}
     fn is_valid(&mut self) -> Result<bool, Errors> {{ validate(self) }}{fields_accessor_methods}
+}}
+
+impl fmt::Display for {Resource} {{
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {{
+        fmt.write_str(&format!("{Resource} #{{}}", self.id))
+    }}
 }}
 
 #[insertable_into({resources})]
