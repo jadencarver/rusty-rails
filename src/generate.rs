@@ -11,7 +11,11 @@ pub fn main() {
         .about("Code generation tool for Rapid Application Development")
         .subcommand(SubCommand::with_name("scaffold").about("Generates a full RESTful resource")
                     .arg(Arg::with_name("resource").help("a name for the resource").required(true).takes_value(true))
-                    .arg(Arg::with_name("fields").help("attributes like name:String").takes_value(true).multiple(true))
+                    .arg(Arg::with_name("fields").help("attributes like name:string").takes_value(true).multiple(true))
+                   )
+        .subcommand(SubCommand::with_name("model").about("Generates a model")
+                    .arg(Arg::with_name("resource").help("a name for the model").required(true).takes_value(true))
+                    .arg(Arg::with_name("fields").help("attributes like name:string").takes_value(true).multiple(true))
                    )
         .get_matches();
 
@@ -19,8 +23,21 @@ pub fn main() {
         Some("scaffold") => {
             let scaffold = args.subcommand_matches("scaffold").unwrap();
             let fields: Vec<Field> = parse_fields(scaffold.values_of("fields").unwrap());
-            generators::scaffold::scaffold(scaffold.value_of("resource").unwrap(), fields)
+            let resource = Resource::new(scaffold.value_of("resource").unwrap());
+            generators::scaffold::scaffold(resource, fields);
         },
+        Some("model") => {
+            let model = args.subcommand_matches("model").unwrap();
+            let fields: Vec<Field> = parse_fields(model.values_of("fields").unwrap());
+            let resource = Resource::new(model.value_of("resource").unwrap());
+            generators::scaffold::model(&resource, &fields);
+        },
+        Some("controller") => {
+            let model = args.subcommand_matches("controller").unwrap();
+            let fields: Vec<Field> = parse_fields(model.values_of("fields").unwrap());
+            let resource = Resource::new(model.value_of("resource").unwrap());
+            generators::scaffold::model(&resource, &fields);
+        }
         _ => {}
     }
 

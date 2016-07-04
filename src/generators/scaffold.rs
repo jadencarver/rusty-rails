@@ -1,14 +1,10 @@
 use std::io::prelude::*;
 use ansi_term::Colour::*;
-use chrono;
 use std::fs::*;
-use generators;
 use generators::{Field, FieldType, Resource};
 
 #[allow(non_snake_case)]
-pub fn scaffold(resource: &str, fields: Vec<Field>) {
-    let resource = Resource::new(resource);
-
+pub fn scaffold(resource: Resource, fields: Vec<Field>) {
     preamble(&resource);
     controller(&resource, &fields);
     model(&resource, &fields);
@@ -88,7 +84,7 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
     ).expect("failed to write the view index");
 }
 
-fn model(resource: &Resource, fields: &Vec<Field>) {
+pub fn model(resource: &Resource, fields: &Vec<Field>) {
     let model_fields = fields.iter().fold(String::new(), |mut s, field| {
         s.push_str(&format!("\n    {}{}: {},",
                             if field.field_pub { "pub " } else { "" },
