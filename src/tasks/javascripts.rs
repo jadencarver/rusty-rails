@@ -2,10 +2,12 @@ use std::process::Command;
 use std::collections::BTreeMap;
 use glob::glob;
 use std::io::prelude::*;
-use std::fs::File;
+use std::fs::*;
 extern crate serde_json;
 
 pub fn compile() {
+    create_dir("vendor").unwrap_or(());
+    create_dir("vendor/assets").unwrap_or(());
     Command::new("bower").arg("install").status().expect("Unable to run bower");
 
     let mut sources: BTreeMap<String, BTreeMap<&str, String>> = BTreeMap::new();

@@ -2,5 +2,6 @@
 /public/assets/*
 /vendor/assets/*
 /node_modules
+/vendor/assets
 /tmp/*
 *.swp

@@ -52,6 +52,5 @@ generate scaffold blog pub:title:string pub:description created_at:timestamp upd
 To apply upstream changes to your project, simply run:
 
 ```
-git fetch -a
-git merge rusty-rails/latest
+git fetch -a && git merge rusty-rails/latest
 ```
