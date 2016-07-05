@@ -20,5 +20,4 @@ pub mod prelude {
     }
 }
 
-pub mod entries;
 pub mod pages;
