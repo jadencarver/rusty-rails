@@ -21,7 +21,10 @@ fn main() {
     let (css_assets_tx, css_assets_rx) = channel();
     let server_path = Path::new("./target/debug/server");
 
+    // Initial Build
     builder_tx.send(()).unwrap();
+    js_assets_tx.send(()).unwrap();
+    css_assets_tx.send(()).unwrap();
 
     let watcher = thread::spawn(move || {
         let mut watcher_fs: RecommendedWatcher = Watcher::new(watcher_tx).unwrap();
@@ -48,7 +51,6 @@ fn main() {
                     Err(_) => break 'flush
                 }
             }
-            print!("{}[H{}[2J", ESC, ESC);
             let build = Command::new("cargo").arg("build").arg("--bin").arg("server").status();
             if build.unwrap().success() {
                 server_tx.send(()).unwrap();
@@ -79,6 +81,7 @@ fn main() {
 
     let server = thread::spawn(move || {
         loop {
+            print!("{}[H{}[2J", ESC, ESC);
             println!("{} Rusty Rails", Green.bold().paint("Starting"));
             match Command::new(server_path).spawn() {
                 Ok(mut handle) => {
