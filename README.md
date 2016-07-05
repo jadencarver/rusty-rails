@@ -10,6 +10,8 @@ git clone https://github.com/jadencarver/rusty-rails.git -b latest [project-name
 
 NOTE: It is recommended that you have binstubs configured, eg `export PATH="./bin:$PATH")`, if not prefix commands with `./bin/`.
 
+You will most likely want to update the `.env` file with the appropriate database credentials.
+
 ## Starting the Server
 
 ```
