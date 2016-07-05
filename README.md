@@ -1,3 +1,3 @@
 # Rusty Rails
 
-A theoretical website build using the Iron Framework and using compiled templates via maud.
+A Rails-inspired framework for web development in Rust.
