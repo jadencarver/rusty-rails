@@ -5,10 +5,28 @@ A Rails-inspired framework for web development in Rust.
 To start a new rusty-rails project, run:
 
 ```
-git clone https://github.com/jadencarver/rusty-rails.git -b latest [project-name] && git checkout -b master
+git clone https://github.com/jadencarver/rusty-rails.git -b latest [project-name] && git checkout -b master && cargo build
 ```
 
-And start exploring!  Some generators are currently supported as well:
+NOTE: It is recommended that you have binstubs configured, eg `export PATH="./bin:$PATH")`, if not prefix commands with `./bin/`.
+
+## Starting the Server
+
+```
+start
+```
+
+And start exploring!  The server will automatically recompile the source code when necessary.
+
+## Generators
+
+Three generators are currently available:
+
+- scaffold
+- model
+- controller
+
+You can invoke the generators using the `generate` command.
 
 ```
 generate scaffold blog title description
@@ -20,8 +38,8 @@ Rusty-Rails will make a good guess at the correct type, but you can also specify
 generate scaffold blog title:string description:text
 ```
 
-Specifiying fields explicitly will make the fields private by default, so you must specify pub
-if you intend them to be publically visible.
+Be aware that specifying fields explicitly will make the fields private by default, so you must specify pub
+in addition to the type if you intend them to be publicly accessible.
 
 ```
 generate scaffold blog pub:title:string pub:description created_at:timestamp updated_at:timestamp
