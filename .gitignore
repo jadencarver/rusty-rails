@@ -1,6 +1,6 @@
 /target
-/public/assets/*
-/vendor/assets/*
+/public/assets
+/vendor/assets
 /node_modules
 /vendor/assets
 /tmp/*

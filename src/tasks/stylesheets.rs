@@ -5,6 +5,8 @@ use std::fs::*;
 pub fn compile() {
     create_dir("tmp").unwrap_or(());
     create_dir("tmp/cache").unwrap_or(());
+    create_dir("public").unwrap_or(());
+    create_dir("public/assets").unwrap_or(());
     for file in glob("app/assets/*.scss").unwrap() {
         let path = file.unwrap();
         let src = path.to_str().unwrap();

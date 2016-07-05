@@ -8,6 +8,9 @@ extern crate serde_json;
 pub fn compile() {
     create_dir("vendor").unwrap_or(());
     create_dir("vendor/assets").unwrap_or(());
+    create_dir("public").unwrap_or(());
+    create_dir("public/assets").unwrap_or(());
+
     Command::new("bower").arg("install").status().expect("Unable to run bower");
 
     let mut sources: BTreeMap<String, BTreeMap<&str, String>> = BTreeMap::new();
