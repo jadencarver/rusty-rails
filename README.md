@@ -5,7 +5,7 @@ A Rails-inspired framework for web development in Rust.
 To start a new rusty-rails project, run:
 
 ```
-git clone https://github.com/jadencarver/rusty-rails.git -b latest [project-name] && git checkout -b master && cargo build
+PROJECT="project-name" git clone https://github.com/jadencarver/rusty-rails.git -b latest "$PROJECT" && cd "$PROJECT" && git checkout -b master && cargo build
 ```
 
 NOTE: It is recommended that you have binstubs configured, eg `export PATH="./bin:$PATH")`, if not prefix commands with `./bin/`.
