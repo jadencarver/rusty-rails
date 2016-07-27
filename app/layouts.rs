@@ -17,10 +17,6 @@ pub fn application(body_class: &str, body: PreEscaped<String>) -> String {
   page
 }
 
-pub fn entries(body: PreEscaped<String>) -> String {
-    application("entries", body)
-}
-
 pub fn pages(body: PreEscaped<String>) -> String {
     application("pages", body)
 }

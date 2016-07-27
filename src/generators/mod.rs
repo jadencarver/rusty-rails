@@ -1,4 +1,5 @@
 use chrono;
+use std::fmt::Display;
 
 pub struct Resource {
     pub name: String,
@@ -7,11 +8,35 @@ pub struct Resource {
     pub timestamp: String
 }
 
+fn pluralize<T: Display>(text: T) -> String {
+	let orig_string = format!("{}", text);
+	let string = orig_string.trim();
+	if string == "" { return String::new() }
+	let string_lowercase = string.to_lowercase();
+	let string_last_char = string_lowercase.chars().last().unwrap();
+	let string_second_to_last_char = string_lowercase.chars().rev().nth(1).unwrap_or(' ');
+	match string_last_char {
+		'y' => match string_second_to_last_char {
+			'a' | 'e' | 'i' | 'o' | 'u' => format!("{}s", string),
+			_ => format!("{}ies", &string[0..string.len()-1])
+		},
+		'h' if string_second_to_last_char == 'c' || string_second_to_last_char == 's' => format!("{}es", string),
+		'x' | 's' | 'z' | 'o' => format!("{}es", string),
+		_ => match string_lowercase.as_ref() {
+			"goose" => format!("{:.1}eese", string),
+			"knife" | "loaf" => format!("{:.3}ves", string),
+			"leaf" => format!("{:.3}ves", string),
+			"deer" => format!("{}", string),
+			_ => format!("{}s", string)
+		}
+	}
+}
+
 impl Resource {
     pub fn new(resource: &str) -> Resource {
         Resource {
             name: String::from(resource),
-            plural: format!("{}s", resource),
+            plural: pluralize(resource),
             constant: format!("{}{}", &resource.to_uppercase()[0..1], &resource[1..]),
             timestamp: format!("{}", chrono::Local::now().format("%Y%m%d%H%M%S"))
         }

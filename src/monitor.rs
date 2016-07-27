@@ -32,6 +32,7 @@ fn main() {
         loop {
             let event = watcher_rx.recv().unwrap();
             let path = event.path.unwrap();
+            println!("== {}", path.to_str().unwrap());
             match path.extension() {
                 Some(ext) if ext == "rs" => builder_tx.send(()).unwrap(),
                 Some(ext) if ext == "scss" => css_assets_tx.send(()).unwrap(),

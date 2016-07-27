@@ -5,10 +5,11 @@
 ///
 ///
 extern crate iron;
-#[macro_use] pub extern crate router;
+#[macro_use] extern crate router;
 extern crate logger;
 extern crate staticfile;
-pub extern crate params;
+extern crate params;
+extern crate rand;
 
 /// ## Maud for Templating is Schweet
 ///
