@@ -1,5 +1,6 @@
 use chrono;
 use std::fmt::Display;
+use clap::Values;
 
 pub struct Resource {
     pub name: String,
@@ -59,6 +60,41 @@ pub enum FieldType {
 }
 
 impl Field {
+
+    pub fn parse(attributes: Values) -> Vec<Field> {
+        attributes.map( |attribute| {
+            let mut split = attribute.split(':');
+            let attr1 = split.next().unwrap_or("");
+            let attr2 = split.next().unwrap_or("");
+            let attr3 = split.next().unwrap_or("");
+            if attr1 == "pub" && attr2 != "" && attr3 != "" {
+                Field { // pub:name:type
+                    field_pub: true,
+                    field_name: String::from(attr2),
+                    field_type: String::from(attr3)
+                }
+            } else if attr1 == "pub" && attr2 != "" && attr3 == "" {
+                Field { // pub:name
+                    field_pub: true,
+                    field_name: String::from(attr2),
+                    field_type: String::from(attr2)
+                }
+            } else if attr1 != "" && attr1 != "pub" && attr2 != "" && attr3 == "" {
+                Field { // name:type
+                    field_pub: false,
+                    field_name: String::from(attr1),
+                    field_type: String::from(attr2)
+                }
+            } else if attr1 != "" && attr2 == "" && attr3 == "" {
+                Field { // type
+                    field_pub: true,
+                    field_name: String::from(attr1),
+                    field_type: String::from(attr1)
+                }
+            } else { panic!("Unable to interpret field arguments!") }
+        }).collect()
+    }
+
     // returns the SQL appropriate column type
     pub fn sql_type(&self) -> String {
         let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));

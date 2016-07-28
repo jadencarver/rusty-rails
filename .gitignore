@@ -5,3 +5,4 @@
 /vendor/assets
 /tmp/*
 *.swp
+/.sass-cache

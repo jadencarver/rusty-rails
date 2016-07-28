@@ -14,7 +14,7 @@ pub fn application(body_class: &str, body: PreEscaped<String>) -> String {
     }
   }).unwrap();
 
-  page
+  format!("<!DOCTYPE html>{}", page)
 }
 
 pub fn pages(body: PreEscaped<String>) -> String {
