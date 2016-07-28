@@ -95,20 +95,6 @@ impl Field {
         }).collect()
     }
 
-    // returns the SQL appropriate column type
-    pub fn sql_type(&self) -> String {
-        let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
-        let sql_type = format!(",\n    {} {}{}", self.field_name, match general_type {
-            FieldType::Boolean => format!("BOOLEAN"),
-            FieldType::String(len) => format!("VARCHAR({})", len),
-            FieldType::Text(_) => format!("TEXT"),
-            FieldType::Symbol | FieldType::Phone | FieldType::Color => format!("VARCHAR(32)"),
-            FieldType::File | FieldType::Image | FieldType::Video | FieldType::Email | FieldType::Password | FieldType::Search | FieldType::Url => format!("VARCHAR(255)"),
-            FieldType::Integer | FieldType::Decimal | FieldType::Float => format!("INTEGER"),
-            FieldType::DateTime | FieldType::Date => format!("TIMESTAMP WITH TIME ZONE"),
-        }, if self.field_pub {" NOT NULL"} else {""} );
-        sql_type
-    }
     // converts to strict type from plain-english types
     fn general_type(&self) -> Option<FieldType> {
         match self.field_type.as_ref() {
@@ -126,6 +112,34 @@ impl Field {
             _ => None
         }
     }
+
+	pub fn rust_type(&self) -> String {
+        let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
+		match general_type {
+			FieldType::Boolean => "Boolean",
+			FieldType::String(_) | FieldType::Text(_) | FieldType::Symbol | FieldType::Email | FieldType::Url | FieldType::Color | FieldType::Image | FieldType::Video | FieldType::File | FieldType::Phone | FieldType::Password | FieldType::Search => "String",
+			FieldType::Integer => "i64",
+			FieldType::Decimal => "Decimal",
+			FieldType::Float => "f64",
+			FieldType::DateTime | FieldType::Date => "Timestamp",
+		}.to_string()
+	}
+
+    // returns the SQL appropriate column type
+    pub fn sql_type(&self) -> String {
+        let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
+        let sql_type = format!(",\n    {} {}{}", self.field_name, match general_type {
+            FieldType::Boolean => format!("BOOLEAN"),
+            FieldType::String(len) => format!("VARCHAR({})", len),
+            FieldType::Text(_) => format!("TEXT"),
+            FieldType::Symbol | FieldType::Phone | FieldType::Color => format!("VARCHAR(32)"),
+            FieldType::File | FieldType::Image | FieldType::Video | FieldType::Email | FieldType::Password | FieldType::Search | FieldType::Url => format!("VARCHAR(255)"),
+            FieldType::Integer | FieldType::Decimal | FieldType::Float => format!("INTEGER"),
+            FieldType::DateTime | FieldType::Date => format!("TIMESTAMP WITH TIME ZONE"),
+        }, if self.field_pub {" NOT NULL"} else {""} );
+        sql_type
+    }
+
 }
 
 pub mod scaffold;

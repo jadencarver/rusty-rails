@@ -88,7 +88,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
     let model_fields = fields.iter().fold(String::new(), |mut s, field| {
         s.push_str(&format!("\n    {}{}: {},",
                             if field.field_pub { "pub " } else { "" },
-                            field.field_name, field.field_type
+                            field.field_name, field.rust_type()
                            ));
         s
     });
@@ -101,17 +101,17 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
     });
 
     let model_fields_default_values = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n            {field}: {field_type}::new(),", field = field.field_name, field_type = field.field_type));
+        s.push_str(&format!("\n            {field}: {field_type}::new(),", field = field.field_name, field_type = field.rust_type()));
         s
     });
 
     let model_fields_accessor_methods = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    fn {field}(&self) -> &String {{ &self.{field} }}\n    fn set_{field}(&mut self, {field}: {field_type}) {{ self.{field} = {field} }}", field = field.field_name, field_type = field.field_type));
+        s.push_str(&format!("\n    fn {field}(&self) -> &String {{ &self.{field} }}\n    fn set_{field}(&mut self, {field}: {field_type}) {{ self.{field} = {field} }}", field = field.field_name, field_type = field.rust_type()));
         s
     });
 
     let model_fields_accessor_interface = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    fn {field}(&self) -> &String;\n    fn set_{field}(&mut self, {field}: {field_type});", field = field.field_name, field_type = field.field_type));
+        s.push_str(&format!("\n    fn {field}(&self) -> &String;\n    fn set_{field}(&mut self, {field}: {field_type});", field = field.field_name, field_type = field.rust_type()));
         s
     });
     let model_fields_validations: String = fields.iter().fold(String::new(), |mut s, field| {
@@ -150,7 +150,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
 
     let mut migration_up = File::create(format!("{}/up.sql", migration_dir))
         .expect("failed to create the migration up");
-    write!(migration_up, "CREATE TABLE {resources} (\n    id SERIAL PRIMARY KEY,{fields}\n)",
+    write!(migration_up, "CREATE TABLE {resources} (\n    id SERIAL PRIMARY KEY{fields}\n)",
         resources = resource.plural,
         fields = sql_fields
     ).expect("failed to write the migration up");
