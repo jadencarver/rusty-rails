@@ -22,7 +22,7 @@ fn preamble(resource: &Resource) {
 fn controller(resource: &Resource, fields: &Vec<Field>) {
     let mut controller = File::create(format!("app/controllers/{}/mod.rs", resource.plural))
         .expect("failed to create controller module");
-    write!(controller, include_str!("scaffold/controller.rst"),
+    write!(controller, include_str!("scaffold/controller.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
         Resource = resource.constant
@@ -42,26 +42,26 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
 
     let mut views = File::create(format!("app/controllers/{}/views/mod.rs", resource.plural))
         .expect("failed to create the view module");
-    write!(views, include_str!("scaffold/views-mod.rst"),
+    write!(views, include_str!("scaffold/views-mod.tmpl.rs"),
         resource = resource.name
     ).expect("failed to write the view module");
 
     let mut views_index = File::create(format!("app/controllers/{}/views/index.rs", resource.plural))
         .expect("failed to create the index view");
-    write!(views_index, include_str!("scaffold/views-index.rst"),
+    write!(views_index, include_str!("scaffold/views-index.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
         Resource = resource.constant
     ).expect("failed to write the view index");
 
     let show_fields = fields.iter().filter(|field| field.field_pub).fold(String::new(), |mut view, field| {
-        view.push_str(&format!(include_str!("scaffold/views-show-field.rst"), resource = resource.name, field = field.field_name));
+        view.push_str(&format!(include_str!("scaffold/views-show-field.tmpl.rs"), resource = resource.name, field = field.field_name));
         view
     });
 
     let mut views_show = File::create(format!("app/controllers/{}/views/show.rs", resource.plural))
         .expect("failed to create the index view");
-    write!(views_show, include_str!("scaffold/views-show.rst"),
+    write!(views_show, include_str!("scaffold/views-show.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
         Resource = resource.constant,
@@ -69,13 +69,13 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
     ).expect("failed to write the view index");
 
     let form_fields = fields.iter().fold(String::new(), |mut view, field| {
-        view.push_str(&format!(include_str!("scaffold/views-form-field.rst"), resource = resource.name, field = field.field_name, field_type = field.field_type));
+        view.push_str(&format!(include_str!("scaffold/views-form-field.tmpl.rs"), resource = resource.name, field = field.field_name, field_type = field.field_type));
         view
     });
 
     let mut views_form = File::create(format!("app/controllers/{}/views/form.rs", resource.plural))
         .expect("failed to create the index view");
-    write!(views_form, include_str!("scaffold/views-form.rst"),
+    write!(views_form, include_str!("scaffold/views-form.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
         Resource = resource.constant,
@@ -121,7 +121,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
 
     let mut models = File::create(format!("app/models/{}.rs", resource.name))
         .expect("failed to create the index view");
-    write!(models, include_str!("scaffold/model.rst"),
+    write!(models, include_str!("scaffold/model.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
         Resource = resource.constant,
