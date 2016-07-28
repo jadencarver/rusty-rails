@@ -106,12 +106,12 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
     });
 
     let model_fields_accessor_methods = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    fn {field}(&self) -> &String {{ &self.title }}\n    fn set_title(&mut self, {field}: {field_type}) {{ self.{field} = {field} }}", field = field.field_name, field_type = field.field_type));
+        s.push_str(&format!("\n    fn {field}(&self) -> &String {{ &self.{field} }}\n    fn set_{field}(&mut self, {field}: {field_type}) {{ self.{field} = {field} }}", field = field.field_name, field_type = field.field_type));
         s
     });
 
     let model_fields_accessor_interface = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    fn {field}(&self) -> &String;\n    fn set_title(&mut self, {field}: {field_type});", field = field.field_name, field_type = field.field_type));
+        s.push_str(&format!("\n    fn {field}(&self) -> &String;\n    fn set_{field}(&mut self, {field}: {field_type});", field = field.field_name, field_type = field.field_type));
         s
     });
     let model_fields_validations: String = fields.iter().fold(String::new(), |mut s, field| {

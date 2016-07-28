@@ -107,7 +107,6 @@ impl Field {
             FieldType::Integer | FieldType::Decimal | FieldType::Float => format!("INTEGER"),
             FieldType::DateTime | FieldType::Date => format!("TIMESTAMP WITH TIME ZONE"),
         }, if self.field_pub {" NOT NULL"} else {""} );
-        print!("{}", sql_type);
         sql_type
     }
     // converts to strict type from plain-english types
