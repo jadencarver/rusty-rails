@@ -5,7 +5,7 @@ A Rails-inspired framework for web development in Rust.
 To start a new rusty-rails project, run:
 
 ```
-PROJECT="project-name" && git clone https://github.com/jadencarver/rusty-rails.git -b latest "$PROJECT" && cd "$PROJECT" && git checkout -b master && cargo build
+PROJECT="project-name" && git clone https://github.com/jadencarver/rusty-rails.git -b latest "$PROJECT" -o rusty-rails && cd "$PROJECT" && git checkout -b master && cargo build
 ```
 
 NOTE: It is recommended that you have binstubs configured, eg `export PATH="./bin:$PATH")`, if not prefix commands with `./bin/`.
@@ -53,4 +53,13 @@ To apply upstream changes to your project, simply run:
 
 ```
 git fetch -a && git merge rusty-rails/latest
+```
+
+## Issues
+
+Rusty-Rails is known to build correctly using the toolchain specified in [.rust-version](.rust-version).
+If you experience issues compiling, and are using rustup.rs, run:
+
+```
+rustup override set `cat .rust-version`
 ```
