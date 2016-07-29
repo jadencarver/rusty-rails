@@ -141,7 +141,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
         .expect("failed to append models/mod.rs");
 
     let sql_fields: String = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&field.sql_type());
+        s.push_str(&format!(",\n    {}", field.sql_type()));
         s
     });
 
