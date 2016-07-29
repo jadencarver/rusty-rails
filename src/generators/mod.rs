@@ -143,7 +143,7 @@ impl Field {
         }, match self.field_pub {
 			true => " NOT NULL",
 			false => ""
-		});
+        });
         sql_type
     }
 
