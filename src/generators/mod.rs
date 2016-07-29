@@ -115,14 +115,18 @@ impl Field {
 
 	pub fn rust_type(&self) -> String {
         let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
-		match general_type {
+		let rust_type = match general_type {
 			FieldType::Boolean => "Boolean",
 			FieldType::String(_) | FieldType::Text(_) | FieldType::Symbol | FieldType::Email | FieldType::Url | FieldType::Color | FieldType::Image | FieldType::Video | FieldType::File | FieldType::Phone | FieldType::Password | FieldType::Search => "String",
 			FieldType::Integer => "i64",
 			FieldType::Decimal => "Decimal",
 			FieldType::Float => "f64",
 			FieldType::DateTime | FieldType::Date => "Timestamp",
-		}.to_string()
+		};
+		match self.field_pub {
+			true => rust_type.to_string(),
+			false => format!("Option<{}>", rust_type)
+		}
 	}
 
     // returns the SQL appropriate column type
@@ -136,7 +140,10 @@ impl Field {
             FieldType::File | FieldType::Image | FieldType::Video | FieldType::Email | FieldType::Password | FieldType::Search | FieldType::Url => format!("VARCHAR(255)"),
             FieldType::Integer | FieldType::Decimal | FieldType::Float => format!("INTEGER"),
             FieldType::DateTime | FieldType::Date => format!("TIMESTAMP WITH TIME ZONE"),
-        }, if self.field_pub {" NOT NULL"} else {""} );
+        }, match self.field_pub {
+			true => " NOT NULL",
+			false => ""
+        });
         sql_type
     }
 
