@@ -100,8 +100,9 @@ impl Field {
         match self.field_type.as_ref() {
             "bool" | "boolean" => Some(FieldType::Boolean),
             "str" | "string" | "title" => Some(FieldType::String(255)),
-            "sym" | "city" | "state" | "zip" => Some(FieldType::Symbol),
+            "symbol" | "sym" | "city" | "state" | "zip" => Some(FieldType::Symbol),
             "text" | "description" | "summary" | "content" => Some(FieldType::Text(255)),
+			"integer" | "int" => Some(FieldType::Integer),
             "decimal" => Some(FieldType::Decimal),
             "email" => Some(FieldType::Email),
             "url" => Some(FieldType::Url),
@@ -132,7 +133,7 @@ impl Field {
     // returns the SQL appropriate column type
     pub fn sql_type(&self) -> String {
         let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
-        let sql_type = format!(",\n    {} {}{}", self.field_name, match general_type {
+        let sql_type = format!("{} {}{}", self.field_name, match general_type {
             FieldType::Boolean => format!("BOOLEAN"),
             FieldType::String(len) => format!("VARCHAR({})", len),
             FieldType::Text(_) => format!("TEXT"),
@@ -150,3 +151,54 @@ impl Field {
 }
 
 pub mod scaffold;
+
+#[test]
+fn test_pluralize() {
+	assert_eq!(pluralize("entry"), "entries");
+	assert_eq!(pluralize("post"), "posts");
+	assert_eq!(pluralize("user"), "users");
+}
+
+#[test]
+fn test_field_rust_type() {
+	let field_string = Field {
+		field_name: String::from("string"),
+		field_type: String::from("string"),
+		field_pub: false
+	};
+	assert_eq!(field_string.rust_type(), String::from("Option<String>"));
+	let field_string = Field {
+		field_name: String::from("email"),
+		field_type: String::from("email"),
+		field_pub: true
+	};
+	assert_eq!(field_string.rust_type(), String::from("String"));
+	let field_string = Field {
+		field_name: String::from("integer"),
+		field_type: String::from("integer"),
+		field_pub: false
+	};
+	assert_eq!(field_string.rust_type(), String::from("Option<i64>"));
+}
+
+#[test]
+fn test_field_sql_type() {
+	let field_string = Field {
+		field_name: String::from("description"),
+		field_type: String::from("text"),
+		field_pub: false
+	};
+	assert_eq!(field_string.sql_type(), String::from("description TEXT"));
+	let field_string = Field {
+		field_name: String::from("email"),
+		field_type: String::from("email"),
+		field_pub: true
+	};
+	assert_eq!(field_string.sql_type(), String::from("email VARCHAR(255) NOT NULL"));
+	let field_string = Field {
+		field_name: String::from("user_id"),
+		field_type: String::from("integer"),
+		field_pub: false
+	};
+	assert_eq!(field_string.sql_type(), String::from("user_id INTEGER"));
+}
