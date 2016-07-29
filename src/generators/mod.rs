@@ -10,27 +10,27 @@ pub struct Resource {
 }
 
 fn pluralize<T: Display>(text: T) -> String {
-	let orig_string = format!("{}", text);
-	let string = orig_string.trim();
-	if string == "" { return String::new() }
-	let string_lowercase = string.to_lowercase();
-	let string_last_char = string_lowercase.chars().last().unwrap();
-	let string_second_to_last_char = string_lowercase.chars().rev().nth(1).unwrap_or(' ');
-	match string_last_char {
-		'y' => match string_second_to_last_char {
-			'a' | 'e' | 'i' | 'o' | 'u' => format!("{}s", string),
-			_ => format!("{}ies", &string[0..string.len()-1])
-		},
-		'h' if string_second_to_last_char == 'c' || string_second_to_last_char == 's' => format!("{}es", string),
-		'x' | 's' | 'z' | 'o' => format!("{}es", string),
-		_ => match string_lowercase.as_ref() {
-			"goose" => format!("{:.1}eese", string),
-			"knife" | "loaf" => format!("{:.3}ves", string),
-			"leaf" => format!("{:.3}ves", string),
-			"deer" => format!("{}", string),
-			_ => format!("{}s", string)
-		}
-	}
+    let orig_string = format!("{}", text);
+    let string = orig_string.trim();
+    if string == "" { return String::new() }
+    let string_lowercase = string.to_lowercase();
+    let string_last_char = string_lowercase.chars().last().unwrap();
+    let string_second_to_last_char = string_lowercase.chars().rev().nth(1).unwrap_or(' ');
+    match string_last_char {
+        'y' => match string_second_to_last_char {
+            'a' | 'e' | 'i' | 'o' | 'u' => format!("{}s", string),
+            _ => format!("{}ies", &string[0..string.len()-1])
+        },
+        'h' if string_second_to_last_char == 'c' || string_second_to_last_char == 's' => format!("{}es", string),
+        'x' | 's' | 'z' | 'o' => format!("{}es", string),
+        _ => match string_lowercase.as_ref() {
+            "goose" => format!("{:.1}eese", string),
+            "knife" | "loaf" => format!("{:.3}ves", string),
+            "leaf" => format!("{:.3}ves", string),
+            "deer" => format!("{}", string),
+            _ => format!("{}s", string)
+        }
+    }
 }
 
 impl Resource {
@@ -102,7 +102,7 @@ impl Field {
             "str" | "string" | "title" => Some(FieldType::String(255)),
             "symbol" | "sym" | "city" | "state" | "zip" => Some(FieldType::Symbol),
             "text" | "description" | "summary" | "content" => Some(FieldType::Text(255)),
-			"integer" | "int" => Some(FieldType::Integer),
+            "integer" | "int" => Some(FieldType::Integer),
             "decimal" => Some(FieldType::Decimal),
             "email" => Some(FieldType::Email),
             "url" => Some(FieldType::Url),
@@ -114,21 +114,21 @@ impl Field {
         }
     }
 
-	pub fn rust_type(&self) -> String {
+    pub fn rust_type(&self) -> String {
         let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
-		let rust_type = match general_type {
-			FieldType::Boolean => "Boolean",
-			FieldType::String(_) | FieldType::Text(_) | FieldType::Symbol | FieldType::Email | FieldType::Url | FieldType::Color | FieldType::Image | FieldType::Video | FieldType::File | FieldType::Phone | FieldType::Password | FieldType::Search => "String",
-			FieldType::Integer => "i64",
-			FieldType::Decimal => "Decimal",
-			FieldType::Float => "f64",
-			FieldType::DateTime | FieldType::Date => "Timestamp",
-		};
-		match self.field_pub {
-			true => rust_type.to_string(),
-			false => format!("Option<{}>", rust_type)
-		}
-	}
+        let rust_type = match general_type {
+            FieldType::Boolean => "Boolean",
+            FieldType::String(_) | FieldType::Text(_) | FieldType::Symbol | FieldType::Email | FieldType::Url | FieldType::Color | FieldType::Image | FieldType::Video | FieldType::File | FieldType::Phone | FieldType::Password | FieldType::Search => "String",
+            FieldType::Integer => "i64",
+            FieldType::Decimal => "Decimal",
+            FieldType::Float => "f64",
+            FieldType::DateTime | FieldType::Date => "Timestamp",
+        };
+        match self.field_pub {
+            true => rust_type.to_string(),
+            false => format!("Option<{}>", rust_type)
+        }
+    }
 
     // returns the SQL appropriate column type
     pub fn sql_type(&self) -> String {
@@ -142,8 +142,8 @@ impl Field {
             FieldType::Integer | FieldType::Decimal | FieldType::Float => format!("INTEGER"),
             FieldType::DateTime | FieldType::Date => format!("TIMESTAMP WITH TIME ZONE"),
         }, match self.field_pub {
-			true => " NOT NULL",
-			false => ""
+            true => " NOT NULL",
+            false => ""
         });
         sql_type
     }
@@ -154,51 +154,51 @@ pub mod scaffold;
 
 #[test]
 fn test_pluralize() {
-	assert_eq!(pluralize("entry"), "entries");
-	assert_eq!(pluralize("post"), "posts");
-	assert_eq!(pluralize("user"), "users");
+    assert_eq!(pluralize("entry"), "entries");
+    assert_eq!(pluralize("post"), "posts");
+    assert_eq!(pluralize("user"), "users");
 }
 
 #[test]
 fn test_field_rust_type() {
-	let field_string = Field {
-		field_name: String::from("string"),
-		field_type: String::from("string"),
-		field_pub: false
-	};
-	assert_eq!(field_string.rust_type(), String::from("Option<String>"));
-	let field_string = Field {
-		field_name: String::from("email"),
-		field_type: String::from("email"),
-		field_pub: true
-	};
-	assert_eq!(field_string.rust_type(), String::from("String"));
-	let field_string = Field {
-		field_name: String::from("integer"),
-		field_type: String::from("integer"),
-		field_pub: false
-	};
-	assert_eq!(field_string.rust_type(), String::from("Option<i64>"));
+    let field_string = Field {
+        field_name: String::from("string"),
+        field_type: String::from("string"),
+        field_pub: false
+    };
+    assert_eq!(field_string.rust_type(), String::from("Option<String>"));
+    let field_string = Field {
+        field_name: String::from("email"),
+        field_type: String::from("email"),
+        field_pub: true
+    };
+    assert_eq!(field_string.rust_type(), String::from("String"));
+    let field_string = Field {
+        field_name: String::from("integer"),
+        field_type: String::from("integer"),
+        field_pub: false
+    };
+    assert_eq!(field_string.rust_type(), String::from("Option<i64>"));
 }
 
 #[test]
 fn test_field_sql_type() {
-	let field_string = Field {
-		field_name: String::from("description"),
-		field_type: String::from("text"),
-		field_pub: false
-	};
-	assert_eq!(field_string.sql_type(), String::from("description TEXT"));
-	let field_string = Field {
-		field_name: String::from("email"),
-		field_type: String::from("email"),
-		field_pub: true
-	};
-	assert_eq!(field_string.sql_type(), String::from("email VARCHAR(255) NOT NULL"));
-	let field_string = Field {
-		field_name: String::from("user_id"),
-		field_type: String::from("integer"),
-		field_pub: false
-	};
-	assert_eq!(field_string.sql_type(), String::from("user_id INTEGER"));
+    let field_string = Field {
+        field_name: String::from("description"),
+        field_type: String::from("text"),
+        field_pub: false
+    };
+    assert_eq!(field_string.sql_type(), String::from("description TEXT"));
+    let field_string = Field {
+        field_name: String::from("email"),
+        field_type: String::from("email"),
+        field_pub: true
+    };
+    assert_eq!(field_string.sql_type(), String::from("email VARCHAR(255) NOT NULL"));
+    let field_string = Field {
+        field_name: String::from("user_id"),
+        field_type: String::from("integer"),
+        field_pub: false
+    };
+    assert_eq!(field_string.sql_type(), String::from("user_id INTEGER"));
 }
