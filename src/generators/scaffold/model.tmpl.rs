@@ -37,6 +37,7 @@ impl {Resource} {{
         New{Resource} {{{fields_default_values}
         }}
     }}
+    pub fn id(&self) -> i32 {{ self.id }}
 }}
 
 impl {Resource}Model for {Resource} {{

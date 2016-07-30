@@ -1,4 +1,4 @@
-use models::{resource}::{Resource};
+use models::{resource}::*;
 use maud::PreEscaped;
 
 pub fn show({resource}: {Resource}) -> PreEscaped<String> {{

@@ -8,7 +8,7 @@ pub fn index({resources}: Vec<{Resource}>) -> PreEscaped<String> {{
     html!(body, {{
         ul id="{resource}_index" {{
             @for {resource} in {resources}.iter() {{
-                li ^({resource})
+                li a href=^(format!("/{resources}/{{}}", {resource}.id())) ^({resource})
             }}
         }}
     }}).unwrap();
