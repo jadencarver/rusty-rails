@@ -11,6 +11,7 @@ pub fn index({resources}: Vec<{Resource}>) -> PreEscaped<String> {{
                 li a href=^(format!("/{resources}/{{}}", {resource}.id())) ^({resource})
             }}
         }}
+        a href="/{resources}/new" {{ "New {Resource}" }}
     }}).unwrap();
 
     PreEscaped(body)
