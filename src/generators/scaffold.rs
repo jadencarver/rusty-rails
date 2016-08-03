@@ -20,7 +20,7 @@ fn preamble(resource: &Resource) {
 
 #[allow(non_snake_case)]
 fn controller(resource: &Resource, fields: &Vec<Field>) {
-    let mut controller = File::create(format!("app/controllers/{}/mod.rs", resource.plural))
+    let mut controller = File::create(format!("app/controllers/{}/controller.rs", resource.plural))
         .expect("failed to create controller module");
     write!(controller, include_str!("scaffold/controller.tmpl.rs"),
         resource = resource.name,
@@ -28,23 +28,15 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
         Resource = resource.constant
     ).unwrap();
 
-    // TODO: Don't append controller if it already exists
     let mut controllers_mod = OpenOptions::new().append(true).open("app/controllers/mod.rs")
         .expect("failed to append controllers/mod.rs");
-    write!(controllers_mod, "pub mod {};\n", resource.plural)
+    write!(controllers_mod, "#[path=\"{resources}/controller.rs\"]\npub mod {resources};\n", resources = resource.plural)
         .expect("failed to append controllers/mod.rs");
 
-    // TODO: Detect app/layouts/mod.rs and update the module as appropriate
     let mut layouts_mod = OpenOptions::new().append(true).open("app/layouts.rs")
         .expect("failed to append app/layouts.rs");
     write!(layouts_mod, "\npub fn {r}(body: PreEscaped<String>) -> String {{\n    application(\"{r}\", body)\n}}\n", r= resource.plural)
         .expect("failed to append app/layouts.rs");
-
-    let mut views = File::create(format!("app/controllers/{}/views/mod.rs", resource.plural))
-        .expect("failed to create the view module");
-    write!(views, include_str!("scaffold/views-mod.tmpl.rs"),
-        resource = resource.name
-    ).expect("failed to write the view module");
 
     let mut views_index = File::create(format!("app/controllers/{}/views/index.rs", resource.plural))
         .expect("failed to create the index view");

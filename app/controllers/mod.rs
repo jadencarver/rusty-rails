@@ -1,7 +1,7 @@
 pub mod prelude {
     use persistent;
-    pub use params;
-    pub use router;
+    use params;
+    use router;
     pub use diesel;
     pub use formats;
     pub use layouts;
