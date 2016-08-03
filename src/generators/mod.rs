@@ -63,6 +63,7 @@ impl Field {
 
     pub fn parse(attributes: Values) -> Vec<Field> {
         attributes.map( |attribute| {
+            let attribute = attribute.to_lowercase();
             let mut split = attribute.split(':');
             let attr1 = split.next().unwrap_or("");
             let attr2 = split.next().unwrap_or("");
