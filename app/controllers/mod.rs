@@ -20,4 +20,5 @@ pub mod prelude {
     }
 }
 
+#[path="pages/controller.rs"]
 pub mod pages;
