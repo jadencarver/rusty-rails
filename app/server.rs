@@ -45,6 +45,9 @@ use iron::AfterMiddleware;
 use iron::status;
 use logger::Logger;
 use std::env;
+use std::path::Path;
+use staticfile::Static;
+use std::time::Duration;
 
 /// You can change also change the type of database used by the connection pool.
 pub type DBType = diesel::pg::PgConnection;
@@ -133,7 +136,11 @@ fn main() {
         .expect("DATABASE_URL must be set");
 
     // Iron acts as the router and middleware chain.
-    let mut chain = Chain::new(routes::routes());
+    let mut routes = routes::routes();
+    routes.get("/assets/app/assets/*path", Static::new(Path::new("app/assets/")));
+    routes.get("/assets/vendor/assets/*path", Static::new(Path::new("vendor/assets/")));
+    routes.get("/*path", Static::new(Path::new("public/"))); //.cache(Duration::from_secs(30*24*60*60)));
+    let mut chain = Chain::new(routes);
 
     // Iron and r2d2 provide persistent database connection pooling for all requests.
     let manager = r2d2_diesel::ConnectionManager::<DBType>::new(database_url);

@@ -2,11 +2,11 @@ use controllers::prelude::*;
 use models::{resource}::*;
 use schema::{resources}::dsl::{resources};
 
-mod views {
+mod views {{
     pub mod form;
     pub mod index;
     pub mod show;
-}
+}}
 
 pub fn index(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
