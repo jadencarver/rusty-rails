@@ -3,7 +3,9 @@ use iron::mime::Mime;
 use iron::status;
 use layouts;
 
-mod views;
+mod views {
+    pub mod index;
+}
 
 pub fn index(_: &mut Request) -> IronResult<Response> {
   Ok(Response::with((
