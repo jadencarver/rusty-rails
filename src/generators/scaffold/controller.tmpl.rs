@@ -11,7 +11,7 @@ mod views {{
 pub fn index(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let ref db = *pool.get().unwrap();
-    let results = {resources}.get_results::<{Resource}>(db).unwrap();
+    let results = itry!({resources}.get_results::<{Resource}>(db));
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
@@ -21,9 +21,9 @@ pub fn index(request: &mut Request) -> IronResult<Response> {{
 
 pub fn show(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let {resource} = {resources}.find(id).first::<{Resource}>(db).unwrap();
+    let {resource} = itry!({resources}.find(id).first::<{Resource}>(db));
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
@@ -41,9 +41,9 @@ pub fn new(request: &mut Request) -> IronResult<Response> {{
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let {resource} = {resources}.find(id).first::<{Resource}>(db).unwrap();
+    let {resource} = itry!({resources}.find(id).first::<{Resource}>(db));
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::{resources}(views::form::edit({resource}, None))
@@ -58,7 +58,7 @@ pub fn create(request: &mut Request) -> IronResult<Response> {{
 
     match new_{resource}.is_valid() {{
         Ok(_) => {{
-            let {resource}: {Resource} = diesel::insert(&new_{resource}).into({resources}).get_result(db).unwrap();
+            let {resource}: {Resource} = itry!(diesel::insert(&new_{resource}).into({resources}).get_result(db));
             Ok(Response::with((status::Found,
                                Header(headers::Location(format!("/{resources}/{{}}", {resource}.id))),
                                Header(headers::Connection::close())
@@ -75,14 +75,14 @@ pub fn create(request: &mut Request) -> IronResult<Response> {{
 
 pub fn update(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let mut {resource} = {resources}.find(id).first::<{Resource}>(db).unwrap();
+    let mut {resource} = itry!({resources}.find(id).first::<{Resource}>(db));
     {resource}.update(params);
 
     match {resource}.is_valid() {{
         Ok(_) => {{
-            {resource}.save_changes::<{Resource}>(db).unwrap();
+            itry!({resource}.save_changes::<{Resource}>(db));
             Ok(Response::with((status::Found,
                                Header(headers::Location(format!("/{resources}/{{}}", {resource}.id))),
                                Header(headers::Connection::close())
@@ -99,9 +99,9 @@ pub fn update(request: &mut Request) -> IronResult<Response> {{
 
 pub fn delete(request: &mut Request) -> IronResult<Response> {{
     let (route, _params, pool) = read_request(request);
-    let id = route.find("id").unwrap_or("").parse::<i32>().unwrap();
+    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let mut {resource} = {resources}.find(id).first::<{Resource}>(db).unwrap();
+    let mut {resource} = itry!({resources}.find(id).first::<{Resource}>(db));
     Ok(Response::with((status::Found,
                        Header(headers::Location(format!("/{resource}/{{}}", {resource}.id))),
                        Header(headers::Connection::close())

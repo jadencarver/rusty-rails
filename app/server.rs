@@ -4,7 +4,7 @@
 /// # Rusty Rails uses the Iron Framework
 ///
 ///
-extern crate iron;
+#[macro_use] extern crate iron;
 #[macro_use] extern crate router;
 pub extern crate params;
 extern crate logger;
@@ -158,3 +158,4 @@ fn main() {
         Err(error) => println!("Unable to start: {}", error)
     }
 }
+
