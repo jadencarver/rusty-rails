@@ -22,3 +22,5 @@ pub mod prelude {
 
 #[path="pages/controller.rs"]
 pub mod pages;
+#[path="entries/controller.rs"]
+pub mod entries;
