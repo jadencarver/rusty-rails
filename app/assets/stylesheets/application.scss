@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  line-height: 1.5rem;
   box-sizing: border-box;
 }
 
@@ -10,7 +9,7 @@ body {
   color: $color2;
   background-color: $color1;
   font-size: 12pt;
-  line-height: 1em;
+  line-height: 2rem;
 }
 
 a[href] { color: $color3; }
@@ -18,6 +17,7 @@ a[href]:visited { text-decoration: none; }
 
 h1, h2, h3 {
   font-family: $font-header;
+  font-weight: 300;
   line-height: 4rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -47,9 +47,10 @@ label {
 }
 
 input, textarea {
-  border: solid $color5 2pt;
+  border: none;
   background-color: $color2;
   font-size: 1rem;
+  line-height: inherit;
   padding: 0 0.5rem;
   vertical-align: top;
   &:focus {
@@ -81,7 +82,7 @@ table {
   border: solid $color2 1px;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  td, th { padding: 0.15rem 0.5rem; }
+  td, th { line-height: 2rem; padding: 0 0.5rem; }
   thead, tfoot {
     background-color: $color2;
     color: $color1;
@@ -101,10 +102,13 @@ body > header {
   color: $color2;
 }
 
+.actions, .field {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .actions {
   list-style-type: none;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
   form & > *:first-child { margin-left: 100pt; }
-  li { display: inline-block; margin-right: 1em; }
+  & li { display: inline-block; margin-right: 1em; }
 }
