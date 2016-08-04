@@ -6,12 +6,28 @@ pub fn index(entries: Vec<Entry>) -> PreEscaped<String> {
     let mut body = String::new();
 
     html!(body, {
-        ul id="entry_index" {
-            @for entry in entries.iter() {
-                li a href=^(format!("/entries/{}", entry.id())) ^(entry)
+        h1 "Entries"
+        table id="enties__index" {
+            thead {
+                tr {
+                    th "Entry"
+                    th "Title"
+                    th "Description"
+                }
+            }
+            tbody {
+                @for entry in entries.iter() {
+                    tr {
+                        td a href=^(format!("/entries/{}", entry.id())) ^(entry)
+                        td ^(entry.title())
+                        td ^(entry.description())
+                    }
+                }
             }
         }
-        a href="/entries/new" { "New Entry" }
+        ul.entries__actions.actions {
+            li a href="/entries/new" "New Entry"
+        }
     }).unwrap();
 
     PreEscaped(body)

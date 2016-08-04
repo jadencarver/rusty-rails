@@ -1,100 +1,44 @@
 * {
   margin: 0;
   padding: 0;
-  line-height: 2rem;
+  line-height: 1.5rem;
   box-sizing: border-box;
 }
 
 body {
-  font-family: $font2;
+  font-family: $font-body;
+  color: $color2;
   background-color: $color1;
-  font-size: 16pt;
+  font-size: 12pt;
   line-height: 1em;
 }
 
-a[href] {
-  color: $color4;
-}
+a[href] { color: $color3; }
+a[href]:visited { text-decoration: none; }
 
 h1, h2, h3 {
-  font-family: $font1;
+  font-family: $font-header;
   line-height: 4rem;
-  padding-top: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 h1 { font-size: 4rem; }
 h2 { font-size: 3rem; }
 h3 { font-size: 2rem; }
+h4 { font-size: 1rem; }
+h5 { font-size: 1rem; }
 
 p {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 code, pre {
-  background-color: #EEEEEE;
-  border-radius: 0.25em;
+  color: $color1;
+  background-color: $color2;
+  border-radius: 0.15em;
   padding-left: 0.25em;
   padding-right: 0.25em;
-  border: solid #DDDDDD 1px;
-  box-shadow: 1pt 1pt 1pt #CCCCCC;
-}
-
-ul, ol {
-  > li { margin-left: 1.25em; }
-}
-
-.col-3 > * {
-  width: 33%;
-  float: left;
-}
-
-article, form, .container, body > section {
-  > * {
-    list-style-type: none;
-    max-width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 1rem;
-  }
-  > section {
-    max-width: 100%;
-    padding-bottom: 1rem;
-    &::after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-    > * {
-      max-width: 980px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-  > section:nth-child(1):nth-child(1) {
-    background-color: $color3;
-    color: $color2;
-  }
-  > section:nth-child(2):nth-child(2) {
-    background-color: $color4;
-    color: $color1;
-  }
-  > section:nth-child(4):nth-child(4) {
-    background-color: $color4;
-  }
-  > section:nth-child(2n+1) {
-    background-color: $color1;
-  }
-  > section:nth-child(2n) {
-    background-color: $color2;
-  }
-  > section:last-child {
-    background-color: $color3;
-    color: $color2;
-    a[href] { color: $color1; }
-  }
-  > section ~ section {
-    padding-bottom: 4rem;
-  }
 }
 
 label {
@@ -109,7 +53,7 @@ input, textarea {
   padding: 0 0.5rem;
   vertical-align: top;
   &:focus {
-    background-color: #FFFFFF;
+    background-color: $color2;
     border-color: $color4;
     outline: none;
   }
@@ -125,12 +69,42 @@ textarea {
   height: 200pt;
 }
 
-input[type=submit] {
+button, input[type=submit], input[type=reset], input[type=button] {
   cursor: pointer;
-  background-color: lighten($color5, 10%);
-  color: #FFFFFF;
-  &:active {
-    border-color: darken($color4, 10%);
-    background-color: $color4;
+  background-color: $color2;
+  color: $color1;
+  border: none;
+}
+
+table {
+  border-spacing: 0;
+  border: solid $color2 1px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  td, th { padding: 0.15rem 0.5rem; }
+  thead, tfoot {
+    background-color: $color2;
+    color: $color1;
+    text-align: left;
   }
+}
+
+//--
+
+body > * {
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px;
+}
+
+body > header {
+  color: $color2;
+}
+
+.actions {
+  list-style-type: none;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  form & > *:first-child { margin-left: 100pt; }
+  li { display: inline-block; margin-right: 1em; }
 }

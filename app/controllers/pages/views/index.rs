@@ -4,13 +4,11 @@ pub fn index() -> PreEscaped<String> {
     let mut body = String::new();
 
     html!(body, {
+        header {
+            h1 "Rusty Rails"
+            p "You are riding Rusty Rails!"
+        }
         article {
-            section {
-                figure img style="height: 100pt; float: left; margin-right: 3rem; margin-top: 1rem;" src="/assets/cowboy-hat.svg"
-                    h1 "Rusty Rails"
-                    p "You are riding Rusty Rails!"
-            }
-            section {}
             section {
                 h2 "Getting started"
                     ol {
@@ -20,7 +18,6 @@ pub fn index() -> PreEscaped<String> {
                         li { "Access the " a href="/_rusty" { "built in analytics dashboard" } "." }
                     }
             }
-            section {}
             section {
                 h3 "Additional Help"
                     figure {
@@ -50,8 +47,6 @@ pub fn index() -> PreEscaped<String> {
                         li a href="#" { "Additional Support" }
                     }
             }
-            section {}
-            section {}
         }
     }).unwrap();
 
