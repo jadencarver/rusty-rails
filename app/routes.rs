@@ -10,7 +10,6 @@ pub fn routes() -> Router {
         get    "/entries/:id/edit" => entries::edit,
         post   "/entries"          => entries::create,
         patch  "/entries/:id"      => entries::update,
-        post   "/entries/:id"      => entries::update,
         delete "/entries/:id"      => entries::delete,
     )
 }

@@ -1,15 +1,21 @@
+@import '_fonts';
+@import '_colors';
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+html, body {
   font-family: $font-body;
+  font-size: 11pt;
+  line-height: 2rem;
+}
+
+body {
   color: $color2;
   background-color: $color1;
-  font-size: 12pt;
-  line-height: 2rem;
 }
 
 a[href] { color: $color3; }
@@ -20,7 +26,12 @@ h1, h2, h3 {
   font-weight: 300;
   line-height: 4rem;
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  > span {
+    vertical-align: middle;
+    font-size: 2rem;
+    margin-left: 2rem;
+  }
 }
 
 h1 { font-size: 4rem; }
@@ -46,38 +57,36 @@ label {
   min-width: 100pt;
 }
 
-input, textarea {
-  border: none;
-  background-color: $color2;
+input, textarea, button {
+  background-color: $color1;
+  color: $color2;
+  border: solid $color2 1pt;
   font-size: 1rem;
   line-height: inherit;
   padding: 0 0.5rem;
   vertical-align: top;
   &:focus {
-    background-color: $color2;
-    border-color: $color4;
+    background-color: $color4;
+    border-color: $color3;
     outline: none;
   }
 }
 
-input[type=text], textarea {
-  min-width: 200pt;
-  width: 100%;
-  width: calc(100% - 100pt);
-}
-
 textarea {
-  height: 200pt;
+  min-height: 6rem;
 }
 
 button, input[type=submit], input[type=reset], input[type=button] {
   cursor: pointer;
-  background-color: $color2;
-  color: $color1;
+  background-color: $color3;
+  box-shadow: inset 0pt 0.3em 0pt $color5;
   border: none;
+  color: $color1;
+  font-size: inherit;
 }
 
 table {
+  width: 100%;
   border-spacing: 0;
   border: solid $color2 1px;
   margin-top: 0.5rem;
@@ -90,16 +99,45 @@ table {
   }
 }
 
+ol, ul {
+  padding-left: 2rem;
+}
+
+section {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
 //--
 
 body > * {
   margin-left: auto;
   margin-right: auto;
-  width: 1000px;
+  max-width: 700pt;
+  padding: 0 1rem;
 }
 
 body > header {
-  color: $color2;
+  overflow: auto;
+  background-color: $color5;
+  margin: 0;
+  max-width: 100%;
+  color: $color1;
+  > h1 {
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 700pt;
+    text-shadow: 0 0.3em 0.5em lighten($color5, 25%);
+  }
+}
+
+body > footer {
+  text-align: center;
+  margin: 2rem auto;
 }
 
 .actions, .field {
@@ -109,6 +147,9 @@ body > header {
 
 .actions {
   list-style-type: none;
-  form & > *:first-child { margin-left: 100pt; }
+  padding: 0;
+  @media (min-width: 400px) {
+    form &::before { display: inline-block; content: ''; width: 100pt; }
+  }
   & li { display: inline-block; margin-right: 1em; }
 }

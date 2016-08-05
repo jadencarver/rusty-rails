@@ -6,10 +6,11 @@ pub fn new(entry: NewEntry, errors: Errors) -> PreEscaped<String> {
 
     html!(html, {
         form id="new_entry" action="/entries" method="POST" {
-            h2 "Creating Entry"
+            h2 "New Entry"
             ^(form(entry, errors))
-            div class="actions" {
-                input type="submit" value="Create Entry" /
+            ul class="actions" {
+                li input type="submit" value="Create Entry" /
+                li a href="/entries" "Cancel"
             }
         }
     }).unwrap();
@@ -21,11 +22,12 @@ pub fn edit(entry: Entry, errors: Errors) -> PreEscaped<String> {
     let mut html = String::new();
 
     html!(html, {
-        form action=^(format!("/entries/{}", entry.id)) method="POST" {
-            h2 "Editing Entry"
+        form action=^(format!("/entries/{}?_method=patch", entry.id)) method="POST" {
+            h2 "Edit Entry"
             ^(form(entry, errors))
-            div class="actions" {
-                input type="submit" value="Update Entry" /
+            ul class="actions" {
+                li input type="submit" value="Update Entry" /
+                li a href="/entries" "Cancel"
             }
         }
     }).unwrap();

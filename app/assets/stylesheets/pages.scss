@@ -1,0 +1,12 @@
+body.pages {
+  section:not(:last-child) {
+    $blend: lighten($color1, 80%);
+    margin-top: 1rem;
+    border: solid opacify($color3, 0.9) 1pt;
+    border-bottom: solid $blend 10pt;
+    border-radius: 0 0 2pt 2pt;
+    box-shadow: 0 5pt $color3;
+    background-image: linear-gradient($color1 calc(100% - 30pt), $blend);
+    padding: 0 4rem 4rem;
+  }
+}
