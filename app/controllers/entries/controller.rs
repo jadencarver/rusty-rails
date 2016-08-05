@@ -107,9 +107,9 @@ pub fn delete(request: &mut Request) -> IronResult<Response> {
     let (route, _params, pool) = read_request(request);
     let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let mut entry = itry!(entries.find(id).first::<Entry>(db));
+    itry!(diesel::delete(entries.find(id)).execute(db));
     Ok(Response::with((status::Found,
-                       Header(headers::Location(format!("/entry/{}", entry.id))),
+                       Header(headers::Location(format!("/entries"))),
                        Header(headers::Connection::close())
                       )))
 }
