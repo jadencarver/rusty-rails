@@ -11,7 +11,7 @@ mod views {
 pub fn index(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = read_request(request);
     let ref db = *pool.get().unwrap();
-    let results = itry!(entries.get_results::<Entry>(db));
+    let results = itry!(entries.get_results(db));
 
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
@@ -21,9 +21,9 @@ pub fn index(request: &mut Request) -> IronResult<Response> {
 
 pub fn show(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = read_request(request);
-    let id = itry!(route.find("id").unwrap_or("").parse::<i32>(), (status::BadRequest));
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
     let ref db = *pool.get().unwrap();
-    let entry = match entries.find(id).first::<Entry>(db) {
+    let entry = match entries.find(id).first(db) {
         Ok(entry) => entry,
         Err(error) => match error {
             diesel::result::Error::NotFound => return Err(IronError::new(error, (status::NotFound))),
@@ -47,9 +47,9 @@ pub fn new(request: &mut Request) -> IronResult<Response> {
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = read_request(request);
-    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
     let ref db = *pool.get().unwrap();
-    let entry = itry!(entries.find(id).first::<Entry>(db));
+    let entry = itry!(entries.find(id).first(db));
     Ok(Response::with((status::Ok,
                        Header(formats::html()),
                        layouts::entries(views::form::edit(entry, None))
@@ -81,9 +81,9 @@ pub fn create(request: &mut Request) -> IronResult<Response> {
 
 pub fn update(request: &mut Request) -> IronResult<Response> {
     let (route, params, pool) = read_request(request);
-    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
     let ref db = *pool.get().unwrap();
-    let mut entry = itry!(entries.find(id).first::<Entry>(db));
+    let mut entry: Entry = itry!(entries.find(id).first(db));
     entry.update(params);
 
     match entry.is_valid() {
@@ -105,7 +105,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
 
 pub fn delete(request: &mut Request) -> IronResult<Response> {
     let (route, _params, pool) = read_request(request);
-    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
     let ref db = *pool.get().unwrap();
     itry!(diesel::delete(entries.find(id)).execute(db));
     Ok(Response::with((status::Found,
