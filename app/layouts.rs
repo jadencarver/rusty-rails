@@ -21,7 +21,3 @@ pub fn application(body_class: &str, body: PreEscaped<String>) -> String {
 pub fn pages(body: PreEscaped<String>) -> String {
     application("pages", body)
 }
-
-pub fn entries(body: PreEscaped<String>) -> String {
-    application("entries", body)
-}
