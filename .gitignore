@@ -6,3 +6,4 @@
 /tmp/*
 *.swp
 /.sass-cache
+/.env

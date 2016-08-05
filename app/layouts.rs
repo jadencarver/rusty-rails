@@ -8,6 +8,7 @@ pub fn application(body_class: &str, body: PreEscaped<String>) -> String {
       head {
         title "Rusty Rails"
         link rel="stylesheet" href="/assets/stylesheets.css" /
+        meta name="viewport" content="width=device-width, initial-scale=1" /
         script src="/assets/javascripts.js" {}
       }
       body class=^(body_class) ^(body)

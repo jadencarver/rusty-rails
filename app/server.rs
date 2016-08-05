@@ -1,4 +1,4 @@
-#![feature(custom_derive, custom_attribute, plugin)]
+#![feature(custom_derive, custom_attribute, plugin, stmt_expr_attributes)]
 #![plugin(maud_macros, diesel_codegen, dotenv_macros)]
 
 /// # Rusty Rails uses the Iron Framework
@@ -41,7 +41,7 @@ use iron::prelude::*;
 use iron::modifiers::*;
 use ansi_term::Colour::*;
 use dotenv::dotenv;
-use iron::AfterMiddleware;
+use iron::{AfterMiddleware, BeforeMiddleware};
 use iron::status;
 use logger::Logger;
 use std::env;
@@ -122,6 +122,25 @@ impl AfterMiddleware for ErrorHandler {
     }
 }
 
+struct MethodOverride;
+impl BeforeMiddleware for MethodOverride {
+    fn before(&self, request: &mut Request) -> IronResult<()> {
+        use iron::method::Method;
+        use params::Value;
+        let params = request.get::<params::Params>().unwrap();
+        if request.method == Method::Post {
+            if let Some(value) = params.find(&["_method"]) {
+                request.method = match value {
+                    &Value::String(ref value) if value == "delete" => Method::Delete,
+                    &Value::String(ref value) if value == "patch" => Method::Patch,
+                    _ => Method::Post
+                }
+            }
+        };
+        Ok(())
+    }
+}
+
 
 // Here we go!!
 // ------------------
@@ -137,9 +156,15 @@ fn main() {
 
     // Iron acts as the router and middleware chain.
     let mut routes = routes::routes();
-    routes.get("/assets/app/assets/*path", Static::new(Path::new("app/assets/")));
-    routes.get("/assets/vendor/assets/*path", Static::new(Path::new("vendor/assets/")));
-    routes.get("/*path", Static::new(Path::new("public/"))); //.cache(Duration::from_secs(30*24*60*60)));
+    #[cfg(debug_assertions)]
+    {
+        routes.get("/assets/app/assets/*path", Static::new(Path::new("app/assets/")));
+        routes.get("/assets/vendor/assets/*path", Static::new(Path::new("vendor/assets/")));
+        routes.get("/*path", Static::new(Path::new("public/")));
+    }
+    #[cfg(not(debug_assertions))]
+    routes.get("/*path", Static::new(Path::new("public/")).cache(Duration::from_secs(30*24*60*60)));
+    
     let mut chain = Chain::new(routes);
 
     // Iron and r2d2 provide persistent database connection pooling for all requests.
@@ -149,8 +174,11 @@ fn main() {
     chain.link(persistent::Read::<DB>::both(pool));
 
     let (logger_before, logger_after) = Logger::new(None);
-    chain.link_before(logger_before).link_after(logger_after);
-    chain.link_after(ErrorHandler);
+    chain
+        .link_before(MethodOverride)
+        .link_before(logger_before)
+        .link_after(logger_after)
+        .link_after(ErrorHandler);
 
     // Fire-up them engines!
     match Iron::new(chain).http(&hostname[..]) {
