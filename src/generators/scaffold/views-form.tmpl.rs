@@ -5,7 +5,7 @@ pub fn new({resource}: New{Resource}, errors: Errors) -> PreEscaped<String> {{
     let mut html = String::new();
 
     html!(html, {{
-        form id="new_{resource}" action="/{resources}" method="POST" {{
+        form id="new_{resource}" action="/{resources}" method="post" {{
             h2 "Creating {Resource}"
             ^(form({resource}, errors))
             div class="actions" {{
@@ -21,7 +21,7 @@ pub fn edit({resource}: {Resource}, errors: Errors) -> PreEscaped<String> {{
     let mut html = String::new();
 
     html!(html, {{
-        form action=^(format!("/{resources}/{{}}", {resource}.id)) method="POST" {{
+        form action=^(format!("/{resources}/{{}}?_method=patch", {resource}.id)) method="post" {{
             h2 "Editing {Resource}"
             ^(form({resource}, errors))
             div class="actions" {{
