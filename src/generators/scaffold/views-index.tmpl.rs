@@ -6,12 +6,24 @@ pub fn index({resources}: Vec<{Resource}>) -> PreEscaped<String> {{
     let mut body = String::new();
 
     html!(body, {{
-        ul id="{resource}_index" {{
-            @for {resource} in {resources}.iter() {{
-                li a href=^(format!("/{resources}/{{}}", {resource}.id())) ^({resource})
+        h1 "{Resource}s"
+        table id="{resources}__index" {{
+            thead {{
+                tr {{
+                    th "{Resource}"{headers}
+                }}
+            }}
+            tbody {{
+                @for {resource} in {resources}.iter() {{
+                    tr {{
+                        td a href=^(format!("/{resources}/{{}}", {resource}.id())) ^({resource}){rows}
+                    }}
+                }}
             }}
         }}
-        a href="/{resources}/new" {{ "New {Resource}" }}
+        ul.{resources}__actions.actions {{
+            li a href="/{resources}/new" "New {Resource}"
+        }}
     }}).unwrap();
 
     PreEscaped(body)
