@@ -100,17 +100,23 @@ impl Field {
     fn general_type(&self) -> Option<FieldType> {
         match self.field_type.as_ref() {
             "bool" | "boolean" => Some(FieldType::Boolean),
-            "str" | "string" | "title" => Some(FieldType::String(255)),
+            "str" | "string" | "name" | "title" => Some(FieldType::String(255)),
+            "search" => Some(FieldType::Search),
             "symbol" | "sym" | "city" | "state" | "zip" => Some(FieldType::Symbol),
             "text" | "description" | "summary" | "content" => Some(FieldType::Text(255)),
             "integer" | "int" => Some(FieldType::Integer),
+            "float" => Some(FieldType::Float),
             "decimal" => Some(FieldType::Decimal),
+            "phone" | "tel" => Some(FieldType::Phone),
             "email" => Some(FieldType::Email),
+            "color" => Some(FieldType::Color),
             "url" => Some(FieldType::Url),
             "image" | "picture" => Some(FieldType::Image),
+            "video" => Some(FieldType::Video),
             "file" => Some(FieldType::File),
             "date" => Some(FieldType::Date),
             "datetime" | "timestamp" => Some(FieldType::DateTime),
+            "password" => Some(FieldType::Password),
             _ => None
         }
     }
@@ -118,9 +124,9 @@ impl Field {
     pub fn rust_type(&self) -> String {
         let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
         let rust_type = match general_type {
-            FieldType::Boolean => "Boolean",
+            FieldType::Boolean => "bool",
             FieldType::String(_) | FieldType::Text(_) | FieldType::Symbol | FieldType::Email | FieldType::Url | FieldType::Color | FieldType::Image | FieldType::Video | FieldType::File | FieldType::Phone | FieldType::Password | FieldType::Search => "String",
-            FieldType::Integer => "i64",
+            FieldType::Integer => "i32",
             FieldType::Decimal => "Decimal",
             FieldType::Float => "f64",
             FieldType::DateTime | FieldType::Date => "Timestamp",
@@ -147,6 +153,34 @@ impl Field {
             false => ""
         });
         sql_type
+    }
+
+    pub fn html_type(&self) -> String {
+        let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
+        match general_type {
+            FieldType::Text(_) => String::from("textarea"),
+            FieldType::Symbol => String::from("select"),
+            _ => String::from("input")
+        }
+    }
+
+    pub fn html_input_type(&self) -> Option<String> {
+        let general_type = self.general_type().expect(&format!("type could not be determined for {}", self.field_type));
+        match general_type {
+            FieldType::Boolean => Some(String::from("checkbox")),
+            FieldType::String(_) => Some(String::from("text")),
+            FieldType::Password => Some(String::from("password")),
+            FieldType::Integer | FieldType::Float | FieldType::Decimal => Some(String::from("number")),
+            FieldType::DateTime => Some(String::from("datetime")),
+            FieldType::Date => Some(String::from("date")),
+            FieldType::Email => Some(String::from("email")),
+            FieldType::Phone => Some(String::from("tel")),
+            FieldType::Color => Some(String::from("color")),
+            FieldType::Search => Some(String::from("search")),
+            FieldType::Url => Some(String::from("url")),
+            FieldType::File | FieldType::Image | FieldType::Video => Some(String::from("file")),
+            _ => None
+        }
     }
 
 }
@@ -179,7 +213,7 @@ fn test_field_rust_type() {
         field_type: String::from("integer"),
         field_pub: false
     };
-    assert_eq!(field_string.rust_type(), String::from("Option<i64>"));
+    assert_eq!(field_string.rust_type(), String::from("Option<i32>"));
 }
 
 #[test]
