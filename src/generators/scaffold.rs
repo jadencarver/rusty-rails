@@ -61,7 +61,12 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
     ).expect("failed to write the view index");
 
     let form_fields = fields.iter().fold(String::new(), |mut view, field| {
-        view.push_str(&format!(include_str!("scaffold/views-form-field.tmpl.rs"), resource = resource.name, field = field.field_name, field_type = field.field_type));
+        view.push_str(&format!(include_str!("scaffold/views-form-field.tmpl.rs"),
+            resource = resource.name,
+            field = field.field_name,
+            //html_tag = field.html_type(),
+            html_input_type = field.html_input_type().unwrap_or(String::new())
+        ));
         view
     });
 
@@ -86,14 +91,28 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
     });
 
     let model_fields_from_params = fields.iter().filter(|field| field.field_pub).fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    match params.find(&[\"{resource}\",\"{field}\"]).unwrap().clone() {{
-        Value::String({field}) => {resource}.set_{field}({field}), _ => {{}}
-    }}", resource = resource.name, field = field.field_name));
+        match field.rust_type().as_ref() {
+            "i32" | "i64" | "f32" | "f64" => s.push_str(&format!("\n    match params.find(&[\"{resource}\",\"{field}\"]) {{
+        Some(&Value::String(ref {field})) => {resource}.set_{field}({field}.parse().unwrap()), _ => {{}}
+    }}", resource = resource.name, field = field.field_name)),
+            _ => s.push_str(&format!("\n    match params.find(&[\"{resource}\",\"{field}\"]) {{
+        Some(&Value::String(ref {field})) => {resource}.set_{field}({field}.clone()), _ => {{}}
+    }}", resource = resource.name, field = field.field_name))
+        };
         s
     });
 
     let model_fields_default_values = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n            {field}: {field_type}::new(),", field = field.field_name, field_type = field.rust_type()));
+        if field.field_pub {
+            match field.rust_type().as_ref() {
+                "bool" => s.push_str(&format!("\n            {field}: false,", field = field.field_name)),
+                "i32" | "i64" => s.push_str(&format!("\n            {field}: 0,", field = field.field_name)),
+                "f64" | "f32" => s.push_str(&format!("\n            {field}: 0.0,", field = field.field_name)),
+                _ => s.push_str(&format!("\n            {field}: {field_type}::new(),", field = field.field_name, field_type = field.rust_type()))
+            }
+        } else {
+            s.push_str(&format!("\n            {field}: None,", field = field.field_name))
+        }
         s
     });
 
@@ -107,7 +126,10 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
         s
     });
     let model_fields_validations: String = fields.iter().fold(String::new(), |mut s, field| {
-        s.push_str(&format!("\n    if {resource}.{field}().is_empty() {{ errors.insert(\"{field}\", vec![\"can't be blank\"]); }}", resource = resource.name, field = field.field_name));
+        match field.rust_type().as_ref() {
+            "String" => s.push_str(&format!("\n    if {resource}.{field}().is_empty() {{ errors.insert(\"{field}\", vec![\"can't be blank\"]); }}", resource = resource.name, field = field.field_name)),
+            _ => {}
+        }
         s
     });
 
