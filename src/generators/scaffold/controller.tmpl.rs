@@ -77,7 +77,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
     let ref db = *pool.get().unwrap();
-    let mut {resource} = itry!({resources}.find(id).first(db));
+    let mut {resource}: {Resource} = itry!({resources}.find(id).first(db));
     {resource}.update(params);
 
     match {resource}.is_valid() {{
@@ -103,7 +103,7 @@ pub fn delete(request: &mut Request) -> IronResult<Response> {{
     let ref db = *pool.get().unwrap();
     itry!(diesel::delete({resources}.find(id)).execute(db));
     Ok(Response::with((status::Found,
-                       Header(headers::Location(format!("/{resource}/{{}}", {resource}.id))),
+                       Header(headers::Location(format!("/{resources}"))),
                        Header(headers::Connection::close())
                       )))
 }}
