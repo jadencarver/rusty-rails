@@ -1,5 +1,5 @@
 use std::io::prelude::*;
-use ansi_term::Colour::*;
+use termion::color;
 use std::fs::*;
 use generators::{Field, Resource};
 

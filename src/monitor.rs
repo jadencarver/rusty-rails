@@ -1,8 +1,8 @@
-extern crate ansi_term;
+extern crate termion;
 extern crate notify;
 extern crate glob;
 
-use ansi_term::Colour::*;
+use termion::{color, style, clear};
 use notify::{RecommendedWatcher, Watcher};
 use std::path::Path;
 use std::process::Command;
@@ -32,13 +32,19 @@ fn main() {
         loop {
             let event = watcher_rx.recv().unwrap();
             let path = event.path.unwrap();
-            println!("== {}", path.to_str().unwrap());
-            match path.extension() {
-                Some(ext) if ext == "rs" => builder_tx.send(()).unwrap(),
-                Some(ext) if ext == "scss" => css_assets_tx.send(()).unwrap(),
-                Some(ext) if ext == "js" => js_assets_tx.send(()).unwrap(),
-                _ => {}
+            if let Some(channel) = match path.extension() {
+                Some(ext) if ext == "rs" => Some(&builder_tx),
+                Some(ext) if ext == "scss" => Some(&css_assets_tx),
+                Some(ext) if ext == "js" => Some(&js_assets_tx),
+                _ => None
+            } {
+                let fg = color::Fg(color::Rgb(0xEE,0xEE,0xEE));
+                let bg = color::Bg(color::Rgb(0x33,0x33,0x33));
+                let (width, height) = termion::terminal_size().unwrap_or((80,25));
+                println!("{}{}{}{}", bg, fg, format!("―――{:―<1$}", format!(" {} ", path.to_str().unwrap()), (width - 3) as usize), style::Reset);
+                channel.send(()).unwrap()
             }
+
         }
     });
 
@@ -83,7 +89,7 @@ fn main() {
     let server = thread::spawn(move || {
         loop {
             print!("{}[H{}[2J", ESC, ESC);
-            println!("{} Rusty Rails", Green.bold().paint("Starting"));
+            println!("{}Starting{} Rusty Rails", color::Fg(color::Green), style::Reset);
             match Command::new(server_path).spawn() {
                 Ok(mut handle) => {
                     server_rx.recv().unwrap();
@@ -91,7 +97,7 @@ fn main() {
                     handle.wait().unwrap();
                 }
                 Err(msg) => {
-                    println!("    {} {}", Red.bold().paint("Unable to start server"), msg);
+                    println!("    {}Unable to start server{} {}", color::Fg(color::Red), style::Reset, msg);
                     server_rx.recv().unwrap();
                 }
             }

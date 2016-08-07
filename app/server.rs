@@ -31,7 +31,7 @@ extern crate maud;
 /// cargo packages.
 ///
 #[macro_use] pub extern crate diesel;
-extern crate ansi_term;
+extern crate termion;
 extern crate dotenv;
 extern crate persistent;
 extern crate r2d2;
@@ -39,7 +39,7 @@ extern crate r2d2_diesel;
 
 use iron::prelude::*;
 use iron::modifiers::*;
-use ansi_term::Colour::*;
+use termion::{color, style};
 use dotenv::dotenv;
 use iron::{AfterMiddleware, BeforeMiddleware};
 use iron::status;
@@ -182,7 +182,7 @@ fn main() {
 
     // Fire-up them engines!
     match Iron::new(chain).http(&hostname[..]) {
-        Ok(_) => println!("Started on {}", Green.bold().paint(hostname)),
+        Ok(_) => println!("Started on {}{}{}{}", color::Fg(color::Green), style::Bold, hostname, style::Reset),
         Err(error) => println!("Unable to start: {}", error)
     }
 }
