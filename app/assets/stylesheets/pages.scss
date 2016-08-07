@@ -1,6 +1,6 @@
 body.pages {
   section:not(:last-child) {
-    $blend: lighten($color1, 10%);
+    $blend: lighten($color1, 5%);
     margin-top: 1rem;
     border: solid opacify($color3, 0.9) 1pt;
     border-bottom: solid $blend 10pt;

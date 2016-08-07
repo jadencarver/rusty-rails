@@ -1,14 +1,16 @@
 extern crate clap;
 extern crate chrono;
 extern crate termion;
-use clap::{Arg, App, SubCommand};
+use termion::{color, style};
+use clap::{Arg, App, SubCommand, AppSettings};
 
 mod generators;
 use generators::*;
 
 pub fn main() {
-    let args = App::new("Rusty Rails").version(env!("CARGO_PKG_VERSION"))
+    let app = App::new(format!("{}Rusty Rails{}", style::Bold, style::Reset)).version(env!("CARGO_PKG_VERSION"))
         .about("Code generation tool for Rapid Application Development")
+        .setting(AppSettings::SubcommandRequired)
         .subcommand(SubCommand::with_name("scaffold").about("Generates a full RESTful resource")
                     .arg(Arg::with_name("resource").help("a name for the resource").required(true).takes_value(true))
                     .arg(Arg::with_name("fields").help("attributes like name:string").takes_value(true).multiple(true))
@@ -16,8 +18,8 @@ pub fn main() {
         .subcommand(SubCommand::with_name("model").about("Generates a model")
                     .arg(Arg::with_name("resource").help("a name for the model").required(true).takes_value(true))
                     .arg(Arg::with_name("fields").help("attributes like name:string").takes_value(true).multiple(true))
-                   )
-        .get_matches();
+                   );
+    let args = app.get_matches();
 
     match args.subcommand_name() {
         Some("scaffold") => {
@@ -37,7 +39,7 @@ pub fn main() {
             let fields: Vec<Field> = Field::parse(model.values_of("fields").unwrap());
             let resource = Resource::new(model.value_of("resource").unwrap());
             generators::scaffold::model(&resource, &fields);
-        }
+        },
         _ => {}
     }
 

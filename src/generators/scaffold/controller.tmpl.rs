@@ -21,7 +21,7 @@ pub fn index(request: &mut Request) -> IronResult<Response> {{
 
 pub fn show(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
     let ref db = *pool.get().unwrap();
     let {resource} = itry!({resources}.find(id).first(db));
 
@@ -41,7 +41,7 @@ pub fn new(request: &mut Request) -> IronResult<Response> {{
 
 pub fn edit(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
     let ref db = *pool.get().unwrap();
     let {resource} = itry!({resources}.find(id).first(db));
     Ok(Response::with((status::Ok,
@@ -75,7 +75,7 @@ pub fn create(request: &mut Request) -> IronResult<Response> {{
 
 pub fn update(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
-    let id = itry!(route.find("id").unwrap_or("").parse::<i32>());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
     let ref db = *pool.get().unwrap();
     let mut {resource}: {Resource} = itry!({resources}.find(id).first(db));
     {resource}.update(params);
@@ -99,7 +99,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {{
 
 pub fn delete(request: &mut Request) -> IronResult<Response> {{
     let (route, _params, pool) = read_request(request);
-    let id: i32 = itry!(route.find("id").unwrap_or("").parse());
+    let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
     let ref db = *pool.get().unwrap();
     itry!(diesel::delete({resources}.find(id)).execute(db));
     Ok(Response::with((status::Found,
