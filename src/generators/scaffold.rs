@@ -1,5 +1,5 @@
 use std::io::prelude::*;
-use ansi_term::Colour::*;
+use termion::{color, style};
 use std::fs::*;
 use generators::{Field, Resource};
 
@@ -38,12 +38,23 @@ fn controller(resource: &Resource, fields: &Vec<Field>) {
     write!(layouts_mod, "\npub fn {r}(body: PreEscaped<String>) -> String {{\n    application(\"{r}\", body)\n}}\n", r= resource.plural)
         .expect("failed to append app/layouts.rs");
 
+    let views_index_headers = fields.iter().fold(String::new(), |mut view, field| {
+        view.push_str(&format!("\n                    th \"{}\"", field.field_name));
+        view
+    });
+    let views_index_rows = fields.iter().fold(String::new(), |mut view, field| {
+        view.push_str(&format!("\n                    td ^({resource}.{field}())", resource = resource.name, field = field.field_name));
+        view
+    });
+
     let mut views_index = File::create(format!("app/controllers/{}/views/index.rs", resource.plural))
         .expect("failed to create the index view");
     write!(views_index, include_str!("scaffold/views-index.tmpl.rs"),
         resource = resource.name,
         resources = resource.plural,
-        Resource = resource.constant
+        Resource = resource.constant,
+        headers = views_index_headers,
+        rows = views_index_rows
     ).expect("failed to write the view index");
 
     let show_fields = fields.iter().filter(|field| field.field_pub).fold(String::new(), |mut view, field| {
@@ -173,7 +184,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
         .expect("failed to create the migration up");
     write!(migration_down, "DROP TABLE {resources};", resources = resource.plural,
     ).expect("failed to write the migration down");
-    println!("migrations created apply them using:  {}\n", Green.bold().paint("diesel migration run"))
+    println!("migrations created apply them using:  {}{}diesel migration run{}\n", color::Fg(color::Green), style::Bold, style::Reset)
 
     // TODO: Implement scaffold - route generation (requires code parsing)
 }

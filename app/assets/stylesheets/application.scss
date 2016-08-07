@@ -64,9 +64,8 @@ input, textarea, button {
   font-size: 1rem;
   line-height: inherit;
   padding: 0 0.5rem;
-  vertical-align: top;
   &:focus {
-    background-color: $color4;
+    background-color: lighten($color1, 10%);
     border-color: $color3;
     outline: none;
   }
@@ -79,10 +78,16 @@ textarea {
 button, input[type=submit], input[type=reset], input[type=button] {
   cursor: pointer;
   background-color: $color3;
-  box-shadow: inset 0pt 0.3em 0pt $color5;
   border: none;
+  box-shadow: inset 0pt -0.3em 0pt $color5;
+  border-radius: 3pt;
   color: $color1;
   font-size: inherit;
+  padding-bottom: 0.3rem;
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: lighten($color3, 10%);
+  }
 }
 
 table {
@@ -130,7 +135,7 @@ body > header {
     margin-left: auto;
     margin-right: auto;
     max-width: 700pt;
-    text-shadow: 0 0.3em 0.5em lighten($color5, 25%);
+    text-shadow: 0 0.3em 1em lighten($color5, 25%);
   }
 }
 

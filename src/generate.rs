@@ -1,6 +1,6 @@
 extern crate clap;
 extern crate chrono;
-extern crate ansi_term;
+extern crate termion;
 use clap::{Arg, App, SubCommand};
 
 mod generators;
