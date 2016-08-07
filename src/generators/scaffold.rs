@@ -1,5 +1,5 @@
 use std::io::prelude::*;
-use ansi_term::Colour::*;
+use termion::{color, style};
 use std::fs::*;
 use generators::{Field, Resource};
 
@@ -184,7 +184,7 @@ pub fn model(resource: &Resource, fields: &Vec<Field>) {
         .expect("failed to create the migration up");
     write!(migration_down, "DROP TABLE {resources};", resources = resource.plural,
     ).expect("failed to write the migration down");
-    println!("migrations created apply them using:  {}\n", Green.bold().paint("diesel migration run"))
+    println!("migrations created apply them using:  {}{}diesel migration run{}\n", color::Fg(color::Green), style::Bold, style::Reset)
 
     // TODO: Implement scaffold - route generation (requires code parsing)
 }
