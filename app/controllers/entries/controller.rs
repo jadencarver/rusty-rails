@@ -88,7 +88,7 @@ pub fn update(request: &mut Request) -> IronResult<Response> {
 
     match entry.is_valid() {
         Ok(_) => {
-            itry!(entry.save_changes::<Entry>(db));
+            //itry!(diesel::update(entries.find(id).save_changes(&entry)).get_result(db));
             Ok(Response::with((status::Found,
                                Header(headers::Location(format!("/entries/{}", entry.id))),
                                Header(headers::Connection::close())
