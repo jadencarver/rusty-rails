@@ -1,29 +1,18 @@
-use generators::{Generator, Resource, Model, Controller, View};
-use clap::{ArgMatches, Values};
+use generators::{Generator, GeneratorError, Resource, Model, Controller};
 
 pub struct Scaffold {
-    resource: Resource,
-//    model: Model,
-//    controller: Controller,
-//    views: Vec<View>
+    model: Box<Model>,
+    controller: Box<Controller>,
+    resource: Resource
 }
-
-impl Scaffold {
-    fn new(resource: Resource) -> Result<Box<Scaffold>, Vec<String>> {
-        Ok(Box::new(Scaffold {
-            resource: resource,
-            //model: Model::new(args),
-            //controller: Controller::new(controller),
-            //views: vec![
-            //    View::new("index"),
-            //    View::new("show"),
-            //    View::new("forms")
-            //]
-        }));
-    }
-}
-
 
 impl Generator for Scaffold {
-    fn generate(&self) {}
+    fn new(resource: Resource) -> Result<Box<Scaffold>, GeneratorError> {
+        Ok(Box::new(Scaffold {
+            model: try!(Model::new(resource.clone())),
+            controller: try!(Controller::new(resource.clone())),
+            resource: resource
+        }))
+    }
+    fn generate(self) {}
 }

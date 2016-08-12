@@ -8,6 +8,8 @@ mod views {{
     pub mod show;
 }}
 
+/// The {resources}'s index action for
+///   get /{resources}.html
 pub fn index(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let ref db = *pool.get().unwrap();
@@ -19,6 +21,8 @@ pub fn index(request: &mut Request) -> IronResult<Response> {{
                       )))
 }}
 
+/// The {resources}'s show action for
+///   get /{resources}/:id{{.format}}
 pub fn show(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
@@ -31,6 +35,8 @@ pub fn show(request: &mut Request) -> IronResult<Response> {{
                       )))
 }}
 
+/// The {Resources}'s new {resource} form for
+///   get /{resources}/:id{{.format}}
 pub fn new(request: &mut Request) -> IronResult<Response> {{
     let {resource} = {Resource}::new();
     Ok(Response::with((status::Ok,
@@ -39,6 +45,8 @@ pub fn new(request: &mut Request) -> IronResult<Response> {{
                       )))
 }}
 
+/// The {Resources}'s edit {resources} form for
+///   get /{resources}/:id{{.format}}
 pub fn edit(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
@@ -50,6 +58,8 @@ pub fn edit(request: &mut Request) -> IronResult<Response> {{
                       )))
 }}
 
+/// The {resources}'s create action for
+///   post /{resources}
 pub fn create(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let ref db = *pool.get().unwrap();
@@ -73,6 +83,8 @@ pub fn create(request: &mut Request) -> IronResult<Response> {{
     }}
 }}
 
+/// The {resources}'s update action for
+///   PATCH /{resources}/:id{{.format}}
 pub fn update(request: &mut Request) -> IronResult<Response> {{
     let (route, params, pool) = read_request(request);
     let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));
@@ -97,6 +109,8 @@ pub fn update(request: &mut Request) -> IronResult<Response> {{
     }}
 }}
 
+/// The {resources}'s delete action for
+///   DELETE /{resources}/:id{{.format}}
 pub fn delete(request: &mut Request) -> IronResult<Response> {{
     let (route, _params, pool) = read_request(request);
     let id: i32 = itry!(route.find("id").unwrap_or("").parse(), (status::BadRequest));

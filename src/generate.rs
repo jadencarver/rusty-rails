@@ -1,7 +1,7 @@
 extern crate clap;
 extern crate chrono;
 extern crate termion;
-use clap::{Arg, App, SubCommand, AppSettings};
+use clap::{Arg, App, SubCommand, AppSettings, ArgMatches};
 
 mod generators;
 use generators::*;
@@ -20,13 +20,22 @@ pub fn main() {
                     .arg(Arg::with_name("fields").help("attributes like name:string").takes_value(true).multiple(true))
                    );
     let args = app.get_matches();
+    match generator_for_arguments(args) {
+        Ok(generator) => generator.generate(),
+        Err(error) => {
+            println!("{}", error.description);
+            std::process::exit(1);
+        }
+    }
+}
 
-    match args.subcommand_name() {
+fn generator_for_arguments(arguments: ArgMatches) -> Result<Box<Generator+'static>, GeneratorError> {
+    match arguments.subcommand_name() {
         Some("scaffold") => {
-    //        let scaffold = args.subcommand_matches("scaffold").unwrap();
-    //        let fields: Vec<Field> = Field::parse(scaffold.values_of("fields").unwrap());
-    //        let resource = Resource::new(scaffold.value_of("resource").unwrap());
-    //        generators::scaffold::scaffold(resource, fields);
+            let args = arguments.subcommand_matches("scaffold").unwrap();
+            let resource = try!(Resource::from(args));
+            let scaffold = try!(Scaffold::new(resource));
+            Ok(Box::new(scaffold))
         },
     //    Some("model") => {
     //        let model = args.subcommand_matches("model").unwrap();
@@ -40,7 +49,6 @@ pub fn main() {
     //        let resource = Resource::new(model.value_of("resource").unwrap());
     //        generators::scaffold::model(&resource, &fields);
     //    },
-        _ => {}
+        _ => unreachable!()
     }
-
 }
