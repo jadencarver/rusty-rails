@@ -6,27 +6,29 @@ authors = ["Jaden Carver <jaden.carver@gmail.com>"]
 [dependencies]
 iron = "*"
 persistent = "*"
-router = { version = "*", git = "https://github.com/jadencarver/router.git", branch = "master" }
+router = { version = "*", path = "../rust/router" }
 params = "*"
-maud = "*"
+maud = { version = "*", features = ["iron"] }
 maud_macros = "*"
 logger = "*"
 clap = "*"
-staticfile = { version = "*", features = ["cache"], git = "https://github.com/jadencarver/staticfile.git", branch = "master" }
+staticfile = { version = "*", features = ["cache"], path = "../rust/staticfile" }
 glob = "*"
-diesel = "*"
-diesel_codegen = { version = "*", default-features = false, features = ["postgres"], git = "https://github.com/sgrif/diesel.git" }
-diesel_cli = "*"
-dotenv = "*"
-dotenv_macros = "*"
+#diesel = "*"
+#diesel_codegen = { version = "*", default-features = false, features = ["postgres"] } # git = "https://github.com/sgrif/diesel.git" }
+#diesel_cli = "*"
+dotenv = { version = "*", git = "https://github.com/golddranks/rust-dotenv.git" }
+#dotenv_macros = { version = "*", git = "https://github.com/golddranks/rust-dotenv.git" }
+#dotenv_codegen = { version = "*", git = "https://github.com/golddranks/rust-dotenv.git" }
 serde = "*"
 serde_json = "*"
-r2d2 = "*"
-r2d2-diesel = { version = "*", git = "https://github.com/sgrif/r2d2-diesel.git" }
+#r2d2 = "*"
+#r2d2-diesel = { version = "*", git = "https://github.com/sgrif/r2d2-diesel.git" }
 termion = "*"
 notify = "*"
 rand = "*"
 chrono = "*"
+ws = "*"
 
 [[bin]]
 name = "start"
